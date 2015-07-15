@@ -24,7 +24,7 @@
       </ul>
       <br>
       <div class="tab-content">
-        <div class="tab-pane" id="new">
+        <div class="tab-pane fade" id="new">
           <form id="create" ng-submit="createEpisode()">
             <div class="form-group">
               <label>File</label>
