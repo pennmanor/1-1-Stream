@@ -86,9 +86,15 @@
                       <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
                     </div>
                   </div>
-                  <div ng-hide="edit" class="form-group">
-                    <input class="btn btn-primary" type="submit" value="Update">
+                  <div ng-hide="edit" class="btn-toolbar">
+                    <div class="btn-group">
+                      <input class="btn btn-primary" type="submit" value="Update">
+                    </div>
+                    <div class="btn-group">
+                      <input ng-click="deleteEpisode(episode.id, $index)" class="btn btn-danger" type="button" value="Delete">
+                    </div>
                   </div>
+
                 </div>
               </div>
             </form>
@@ -175,14 +181,33 @@
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(episode) {
           var button = '<a class="btn btn-success" href="#' + episode.id +'" target="_self">View</a>';
-          toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
+          toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
             allowHtml: true
           });
           console.log(episode);
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem creating the Episode.'
-          toastr.warning(responce, 'Episode Creation Failed');
-          console.error('EpisodeCtrl Error - createEpisode: ', arguments);
+          var responce = data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Episode Update Failed');
+          console.error('EpisodeCtrl Error - updateEpisode: ', arguments);
+        });
+      }
+
+      $scope.deleteEpisode = function(episodeID, index) {
+        console.log(episodeID, index);
+        $http({
+          method: 'POST',
+          url: 'php/deleteEpisode.php',
+          data: $.param({id: episodeID}),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data) {
+          $scope.episodes.splice(index, 1);
+          toastr.success('<p>The Episode was successfully deleted.</p>', 'Episode Deleted', {
+            allowHtml: true
+          });
+        }).error(function(data) {
+          var responce = data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Episode Update Failed');
+          console.error('EpisodeCtrl Error - deleteEpisode: ', arguments);
         });
       }
 
