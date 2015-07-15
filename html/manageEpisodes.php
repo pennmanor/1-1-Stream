@@ -52,15 +52,15 @@
           <div class="form-group">
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
           </div>
-          <div ng-repeat="episode in episodes | filter:query">
-            <form ng-submit="updateEpisode(episode); edit = true">
+          <div ng-repeat="episode in episodes | filter:query" ng-init="tempEpisode = copy(episode)">
+            <form ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <div class="panel-title">
                     <div class="row">
                       <div class="col-xs-10">
                         <div style="font-size: 1.5em;" ng-show="edit">{{episode.title}}</div>
-                        <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="episode.title" placeholder="Title">
+                        <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="tempEpisode.title" placeholder="Title">
                       </div>
                       <div class="col-xs-2">
                         <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-info pull-right" value="Edit">
@@ -72,12 +72,12 @@
                 <div class="panel-body">
                   <label>Description</label>
                   <p ng-show="edit">{{episode.description}}</p>
-                  <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="episode.description" placeholder="Description">
+                  <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description">
                   <label>Filename</label>
                   <p ng-show="edit">{{episode.filename}}</p>
                   <div ng-hide="edit" class="row">
                     <div class="col-xs-10">
-                      <select ng-model="episode.filename" class="form-control" name="filename" ng-options="filename for filename in filenames">
+                      <select ng-model="tempEpisode.filename" class="form-control" name="filename" ng-options="filename for filename in filenames">
                         <option value="">--</option>
                       </select>
                       <br>
@@ -94,7 +94,6 @@
                       <input ng-click="deleteEpisode(episode.id, $index)" class="btn btn-danger" type="button" value="Delete">
                     </div>
                   </div>
-
                 </div>
               </div>
             </form>
@@ -126,6 +125,10 @@
       $scope.filenames = [];
       $scope.episodes = [];
 
+      $scope.copy = function (item) {
+        return angular.copy(item);
+      }
+
       $scope.getFilenames = function() {
         $http.get('php/getVideos.php').success(function(filenames) {
           $scope.filenames = filenames;
@@ -142,7 +145,6 @@
           title: $scope.title,
           description: $scope.description
         };
-        console.log(params);
         $http({
           method: 'POST',
           url: 'php/createEpisode.php',
@@ -154,7 +156,6 @@
             allowHtml: true
           });
           $scope.episodes.push(episode);
-          console.log(episode);
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem creating the Episode.'
           toastr.warning(responce, 'Episode Creation Failed');
@@ -173,7 +174,6 @@
       }
 
       $scope.updateEpisode = function(episode) {
-        console.log(episode);
         $http({
           method: 'POST',
           url: 'php/updateEpisode.php',
@@ -184,7 +184,6 @@
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
             allowHtml: true
           });
-          console.log(episode);
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
@@ -193,7 +192,6 @@
       }
 
       $scope.deleteEpisode = function(episodeID, index) {
-        console.log(episodeID, index);
         $http({
           method: 'POST',
           url: 'php/deleteEpisode.php',
