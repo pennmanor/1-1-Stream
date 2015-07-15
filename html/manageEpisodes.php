@@ -29,12 +29,13 @@
             <div class="form-group">
               <label>File</label>
               <div class="row">
-                <div class="col-xs-10">
+                <div class="col-xs-9">
                   <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames">
                     <option value="">--</option>
                   </select>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-3">
+                  <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
                   <input ng-click="getFilenames()" type="button" class="btn btn-info pull-right" value="Refresh">
                 </div>
               </div>
@@ -80,13 +81,15 @@
                   <label>Filename</label>
                   <p ng-show="edit">{{episode.filename}}</p>
                   <div ng-hide="edit" class="row">
-                    <div class="col-xs-10">
-                      <select ng-model="tempEpisode.filename" class="form-control" name="filename" ng-options="filename for filename in filenames">
-                        <option value="">--</option>
+                    <div class="col-xs-9">
+                      <select ng-model="tempEpisode.filename" class="form-control" name="filename">
+                        <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
+                        <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
                       </select>
                       <br>
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-xs-3">
+                      <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
                       <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
                     </div>
                   </div>
@@ -129,12 +132,19 @@
       $scope.filenames = [];
       $scope.episodes = [];
 
+      var fileFilter = 'NOT_IN_DB';
+
+      $scope.changeFileFilter = function() {
+        fileFilter = fileFilter === 'NOT_IN_DB' ? '': 'NOT_IN_DB';
+        $scope.getFilenames();
+      }
+
       $scope.copy = function (item) {
         return angular.copy(item);
       }
 
       $scope.getFilenames = function() {
-        $http.get('php/getVideos.php').success(function(filenames) {
+        $http.get('php/getVideos.php?filter=' + fileFilter).success(function(filenames) {
           $scope.filenames = filenames;
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem getting the Video Filenames.'
@@ -160,6 +170,7 @@
             allowHtml: true
           });
           $scope.episodes.push(episode);
+          $scope.getFilenames();
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem creating the Episode.'
           toastr.warning(responce, 'Episode Creation Failed');
@@ -188,6 +199,7 @@
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
             allowHtml: true
           });
+          $scope.getFilenames();
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
@@ -206,6 +218,7 @@
           toastr.success('<p>The Episode was successfully deleted.</p>', 'Episode Deleted', {
             allowHtml: true
           });
+          $scope.getFilenames();
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
