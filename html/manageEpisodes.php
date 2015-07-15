@@ -17,7 +17,8 @@
   </head>
   <body>
     <div class="container" ng-controller="EpisodeCtrl">
-      <h1 class="page-header">1:1 Podcasts Episode Editor</h1>
+      <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
+      <a class="btn btn-default pull-right" href="episodes.html">Exit</a>
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#new" data-toggle="tab">New</a></li>
         <li role="presentation" class="active"><a href="#list" data-toggle="tab">List</a></li>
