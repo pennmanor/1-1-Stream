@@ -26,7 +26,6 @@
       <div class="tab-content">
         <div class="tab-pane" id="new">
           <form id="create" ng-submit="createEpisode()">
-            <legend>New Episode</legend>
             <div class="form-group">
               <label>File</label>
               <div class="row">
