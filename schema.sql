@@ -26,9 +26,9 @@ DROP TABLE IF EXISTS `episode`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `episode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `filename` varchar(45) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `description` varchar(45) DEFAULT NULL,
+  `filename` varchar(45) NOT NULL,
+  `title` text NOT NULL,
+  `description` mediumtext NOT NULL,
   `viewable` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
@@ -43,4 +43,4 @@ CREATE TABLE `episode` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-15  0:39:42
+-- Dump completed on 2015-07-15 10:48:04
