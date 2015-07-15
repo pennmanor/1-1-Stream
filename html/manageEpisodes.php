@@ -31,7 +31,7 @@
                   </select>
                 </div>
                 <div class="col-xs-2">
-                  <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
+                  <input ng-click="getFilenames()" type="button" class="btn btn-info pull-right" value="Refresh">
                 </div>
               </div>
             </div>
