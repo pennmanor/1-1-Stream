@@ -1,0 +1,27 @@
+{
+  "name": "1-1-Stream",
+  "version": "0.1.0",
+  "homepage": "https://github.com/chuck-aka-ben/1-1-Stream",
+  "authors": [
+    "Benjamin Loong Thomas <benjamin@thomasnetwork.net>"
+  ],
+  "description": "1:1 Podcast Server",
+  "keywords": [
+    "nginx"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4",
+    "angular": "~1.4.2",
+    "angular-toastr": "~1.4.1",
+    "angular-animate": "~1.4.2"
+  }
+}

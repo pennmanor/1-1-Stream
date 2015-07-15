@@ -1,5 +1,5 @@
 <?php
-  $dir = "/usr/local/nginx/html/videos/";
+  $dir = "/home/benjamin/Development/1-1-Stream/html/videos";
 
   $files = array();
 
