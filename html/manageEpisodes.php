@@ -9,17 +9,22 @@
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
+    <style>
+      textarea {
+        resize: vertical;
+      }
+    </style>
   </head>
   <body>
     <div class="container" ng-controller="EpisodeCtrl">
       <h1 class="page-header">1:1 Podcasts Episode Editor</h1>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#new" data-toggle="tab">New</a></li>
-        <li role="presentation"><a href="#list" data-toggle="tab">List</a></li>
+        <li role="presentation"><a href="#new" data-toggle="tab">New</a></li>
+        <li role="presentation" class="active"><a href="#list" data-toggle="tab">List</a></li>
       </ul>
       <br>
       <div class="tab-content">
-        <div class="tab-pane active" id="new">
+        <div class="tab-pane" id="new">
           <form id="create" ng-submit="createEpisode()">
             <legend>New Episode</legend>
             <div class="form-group">
@@ -41,14 +46,14 @@
             </div>
             <div class="form-group">
               <label>Description</label>
-              <textarea ng-model="description" class="form-control" name="description" rows="3" style="resize: vertical" placeholder="Description"></textarea>
+              <textarea ng-model="description" class="form-control" name="description" rows="3" placeholder="Description"></textarea>
             </div>
             <div class="form-group">
               <input class="btn btn-primary" type="submit" value="Create">
             </div>
           </form>
         </div>
-        <div class="tab-pane" id="list">
+        <div class="tab-pane active in fade" id="list">
           <div class="form-group">
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
           </div>
@@ -72,7 +77,7 @@
                 <div class="panel-body">
                   <label>Description</label>
                   <p ng-show="edit">{{episode.description}}</p>
-                  <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description">
+                  <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description"></textarea>
                   <label>Filename</label>
                   <p ng-show="edit">{{episode.filename}}</p>
                   <div ng-hide="edit" class="row">
@@ -151,7 +156,7 @@
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(episode) {
-          var button = '<a class="btn btn-success" href="#' + episode.id +'" target="_self">View</a>';
+          var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
             allowHtml: true
           });
@@ -180,7 +185,7 @@
           data: $.param(episode),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(episode) {
-          var button = '<a class="btn btn-success" href="#' + episode.id +'" target="_self">View</a>';
+          var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
             allowHtml: true
           });

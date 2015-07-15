@@ -1,42 +1,67 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html ng-app="viewEpisodes">
+  <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="1:1 Stream">
+    <meta name="author" content="Benjamin Thomas">
     <title>Episodes</title>
-
-</head>
-<body>
-    <div class="container">
-      <h1>Episodes</h1>
-      <button id="refresh">Refresh</button>
-      <ul id="list">
-      </ul>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="styles/angular-toastr.min.css">
+  </head>
+  <body>
+    <div class="container" ng-controller="EpisodeCtrl">
+      <h1 class="page-header">1:1 Podcast Episodes</h1>
+      <br>
+      <div ng-repeat="episode in episodes | filter:query" ng-init="tempEpisode = copy(episode)">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title" style="font-size: 1.5em;">{{episode.title}}</div>
+          </div>
+          <div class="panel-body">
+            <label>Description</label>
+            <p>{{episode.description}}</p>
+            <p><a class="btn btn-info" href="episode.php?id={{episode.id}}">View</a></p>
+          </div>
+        </div>
+      </div>
     </div>
-</body>
-<script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    function refresh() {
-      $.ajax('getVideos.php',{dataType: 'json'}).done(function(videos) {
-        console.log("Success: ", videos);
-
-
-        $('#list').html('');
-        for(var i in videos) {
-          var item = '<li><a href="episode.php?name=' + videos[i] + '">'
-           + videos[i] + '</a></li>';
-          $('#list').append(item);
-        }
-
-      }).error(function() {
-        console.log("Refresh Error.");
+  </body>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/angular.min.js"></script>
+  <script type="text/javascript" src="js/angular-animate.min.js"></script>
+  <script type="text/javascript" src="js/angular-toastr.min.js"></script>
+  <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script src="js/video.js"></script>
+  <script type="text/javascript">
+    var app = angular.module('viewEpisodes', ['toastr', 'ngAnimate']);
+    app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
+      $animateProvider.classNameFilter(/animate/);
+      $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
       });
-    }
 
+      angular.extend(toastrConfig, {
+        toastClass: 'toast animate'
+      });
+    }]);
+    app.controller('EpisodeCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
+      $scope.episodes = [];
 
-    refresh();
+      $scope.getEpisodes = function() {
+        $http.get('php/getEpisodes.php').success(function(episodes) {
+          $scope.episodes = episodes;
+        }).error(function(data) {
+          var responce = data.message ? data.message : 'There was a problem getting the Episodes.'
+          toastr.warning(responce, 'Fetching Episodes Failed');
+          console.error('EpisodeCtrl Error - getEpisodes:', arguments);
+        });
+      }
 
-    $('#refresh').click(refresh);
-  });
-</script>
+      $scope.getEpisodes();
+    }]);
+  </script>
 </html>
