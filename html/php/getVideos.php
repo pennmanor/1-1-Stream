@@ -1,5 +1,7 @@
 <?php
-  $dir = "/home/benjamin/Development/1-1-Stream/html/videos";
+  include('config.php');
+
+  $dir = VIDEO_DIR;
 
   $files = array();
 
