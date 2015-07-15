@@ -58,7 +58,7 @@
           <div class="form-group">
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
           </div>
-          <div ng-repeat="episode in episodes | filter:query" ng-init="tempEpisode = copy(episode)">
+          <div ng-repeat="episode in episodes | filter:query | orderBy:'-id'" ng-init="tempEpisode = copy(episode)">
             <form ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)">
               <div class="panel panel-default">
                 <div class="panel-heading">

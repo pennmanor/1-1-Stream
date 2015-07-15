@@ -48,6 +48,10 @@
           <p class="lead"><?php echo $episode['description']?></p>
         </div>
       </div>
+      <hr>
+      <div class="text-center lead">
+        <a href="episodes.html">View All Episodes</a>
+      </div>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>

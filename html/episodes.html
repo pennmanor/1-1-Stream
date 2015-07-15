@@ -14,7 +14,7 @@
     <div class="container" ng-controller="EpisodeCtrl">
       <h1 class="page-header">1:1 Podcast Episodes</h1>
       <br>
-      <div ng-repeat="episode in episodes | filter:query" ng-init="tempEpisode = copy(episode)">
+      <div ng-repeat="episode in episodes | filter:query | orderBy:'-id'" ng-init="tempEpisode = copy(episode)">
         <div class="panel panel-default">
           <div class="panel-heading">
             <div class="panel-title" style="font-size: 1.5em;">{{episode.title}}</div>
