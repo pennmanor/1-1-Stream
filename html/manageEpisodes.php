@@ -174,7 +174,11 @@
           method: 'POST',
           url: 'php/createEpisode.php',
           data: $.param(params),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: function(data, headers) {
+            console.log(data);
+            return data;
+          }
         }).success(function(episode) {
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
@@ -217,7 +221,11 @@
           method: 'POST',
           url: 'php/updateEpisode.php',
           data: $.param(episode),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: function(data, headers) {
+            console.log(data);
+            return data;
+          }
         }).success(function(episode) {
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
@@ -236,7 +244,11 @@
           method: 'POST',
           url: 'php/deleteEpisode.php',
           data: $.param({id: episode.id}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: function(data, headers) {
+            console.log(data);
+            return data;
+          }
         }).success(function(data) {
           var index = $scope.episodes.indexOf(episode);
           $scope.episodes.splice(index, 1);
