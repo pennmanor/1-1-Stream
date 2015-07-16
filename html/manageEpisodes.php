@@ -175,11 +175,12 @@
           url: 'php/createEpisode.php',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: function(data, headers) {
-            console.log(data);
-            return data;
-          }
+          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
         }).success(function(episode) {
+          console.log(episode);
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
             allowHtml: true
@@ -261,6 +262,16 @@
           toastr.warning(responce, 'Episode Update Failed');
           console.error('EpisodeCtrl Error - deleteEpisode: ', arguments);
         });
+      }
+
+      function appendTransform(defaults, transform) {
+
+        // We can't guarantee that the default transformation is an array
+        defaults = angular.isArray(defaults) ? defaults : [defaults];
+
+        // Append the new transformation to the defaults
+        defaults.unshift(transform);
+        return defaults;
       }
 
       $scope.getFilenames();
