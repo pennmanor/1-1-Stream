@@ -223,10 +223,10 @@
           url: 'php/updateEpisode.php',
           data: $.param(episode),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: function(data, headers) {
-            console.log(data);
-            return data;
-          }
+          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
         }).success(function(episode) {
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
@@ -246,10 +246,10 @@
           url: 'php/deleteEpisode.php',
           data: $.param({id: episode.id}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: function(data, headers) {
-            console.log(data);
-            return data;
-          }
+          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
         }).success(function(data) {
           var index = $scope.episodes.indexOf(episode);
           $scope.episodes.splice(index, 1);
