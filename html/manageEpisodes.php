@@ -154,7 +154,7 @@
         $http.get('php/getVideos.php?filter=' + fileFilter).success(function(filenames) {
           $scope.filenames = filenames;
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem getting the Video Filenames.'
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem getting the Video Filenames.'
           toastr.warning(responce, 'Fetching Filnames Failed');
           console.error('EpisodeCtrl Error - getFilenames:', arguments);
         })
@@ -192,7 +192,7 @@
           $scope.episodes.push(episode);
           $scope.getFilenames();
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem creating the Episode.'
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem creating the Episode.'
           toastr.warning(responce, 'Episode Creation Failed');
           console.error('EpisodeCtrl Error - createEpisode: ', arguments);
         });
@@ -202,7 +202,7 @@
         $http.get('php/getEpisodes.php').success(function(episodes) {
           $scope.episodes = episodes;
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem getting the Episodes.'
+          var responce = data && data.message ? data.message : 'There was a problem getting the Episodes.'
           toastr.warning(responce, 'Fetching Episodes Failed');
           console.error('EpisodeCtrl Error - getEpisodes:', arguments);
         });
@@ -225,7 +225,7 @@
           });
           $scope.getFilenames();
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem updating the Episode.'
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
           console.error('EpisodeCtrl Error - updateEpisode: ', arguments);
         });
@@ -245,7 +245,7 @@
           });
           $scope.getFilenames();
         }).error(function(data) {
-          var responce = data.message ? data.message : 'There was a problem updating the Episode.'
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
           console.error('EpisodeCtrl Error - deleteEpisode: ', arguments);
         });
