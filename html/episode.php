@@ -1,5 +1,5 @@
 <?php
-  require('php/mysql-connect.php');
+  require dirname(__FILE__).'/php/mysql-connect.php';
   openConnection();
   $id = $_GET['id'];
   $result = getByValueFrom('id', $id, 'episode');
