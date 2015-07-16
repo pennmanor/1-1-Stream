@@ -1,5 +1,5 @@
 <?php
-  require("mysql-connect.php");
+  require dirname(__FILE__).'/mysql-connect.php';
   openConnection();
   $result = getAllFrom("episode");
   closeConnection();

@@ -9,7 +9,7 @@
     return;
   }
 
-  require('mysql-connect.php');
+  require dirname(__FILE__).'/mysql-connect.php';
   openConnection();
 
   $query = "DELETE FROM `episode` WHERE `id`='$id';";

@@ -1,5 +1,5 @@
 <?php
-  require dirname(__FILE__)."/config.php";
+  require dirname(__FILE__).'/config.php';
   $connection = NULL;
   function openConnection() {
     global $connection;

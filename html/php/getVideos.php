@@ -1,5 +1,5 @@
 <?php
-  require("mysql-connect.php");
+  require dirname(__FILE__).'/mysql-connect.php';
 
   if(isset($_GET['filter'])) {
     $filter = $_GET['filter'];

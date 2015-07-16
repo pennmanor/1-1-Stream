@@ -6,7 +6,7 @@
     return;
   }
 
-  require('mysql-connect.php');
+  require dirname(__FILE__).'/mysql-connect.php';
   $filename = $_POST['filename'];
   $title = $_POST['title'];
   $description = $_POST['description'];
