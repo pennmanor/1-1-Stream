@@ -26,12 +26,12 @@
       <br>
       <div class="tab-content">
         <div class="tab-pane fade" id="new">
-          <form id="create" ng-submit="createEpisode()">
-            <div class="form-group">
+          <form id="create" name="create" ng-submit="createEpisode(create)">
+            <div class="form-group" ng-class="{ 'has-error': create.filename.$invalid && create.filename.$touched}">
               <label>File</label>
               <div class="row">
                 <div class="col-xs-9">
-                  <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames">
+                  <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames" required>
                     <option value="">--</option>
                   </select>
                 </div>
@@ -41,13 +41,13 @@
                 </div>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error': create.title.$invalid && create.title.$touched}">
               <label>Title</label>
-              <input ng-model="title" class="form-control" type="text" name="title" placeholder="Title">
+              <input ng-model="title" class="form-control" type="text" name="title" placeholder="Title" required>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error': create.description.$invalid && create.description.$touched  }">
               <label>Description</label>
-              <textarea ng-model="description" class="form-control" name="description" rows="3" placeholder="Description"></textarea>
+              <textarea ng-model="description" class="form-control" name="description" rows="3" placeholder="Description" required></textarea>
             </div>
             <div class="form-group">
               <input class="btn btn-primary" type="submit" value="Create">
@@ -59,14 +59,16 @@
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
           </div>
           <div ng-repeat="episode in episodes | filter:query | orderBy:'-id'" ng-init="tempEpisode = copy(episode)">
-            <form ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)">
+            <form name="update" ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <div class="panel-title">
                     <div class="row">
                       <div class="col-xs-10">
                         <div style="font-size: 1.5em;" ng-show="edit">{{episode.title}}</div>
-                        <input ng-hide="edit" class="form-control" type="text" name="description" ng-model="tempEpisode.title" placeholder="Title">
+                        <div class="form-group" ng-class="{ 'has-error': update.title.$invalid && update.title.$touched}">
+                          <input ng-hide="edit" class="form-control" type="text" name="title" ng-model="tempEpisode.title" placeholder="Title" required>
+                        </div>
                       </div>
                       <div class="col-xs-2">
                         <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-info pull-right" value="Edit">
@@ -76,30 +78,34 @@
                   </div>
                 </div>
                 <div class="panel-body">
-                  <label>Description</label>
-                  <p ng-show="edit">{{episode.description}}</p>
-                  <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description"></textarea>
-                  <label>Filename</label>
-                  <p ng-show="edit">{{episode.filename}}</p>
-                  <div ng-hide="edit" class="row">
-                    <div class="col-xs-9">
-                      <select ng-model="tempEpisode.filename" class="form-control" name="filename">
-                        <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
-                        <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
-                      </select>
-                      <br>
-                    </div>
-                    <div class="col-xs-3">
-                      <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
-                      <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
-                    </div>
+                  <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
+                    <label>Description</label>
+                    <p ng-show="edit">{{episode.description}}</p>
+                    <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
                   </div>
-                  <div ng-hide="edit" class="btn-toolbar">
-                    <div class="btn-group">
-                      <input class="btn btn-primary" type="submit" value="Update">
+                  <div class="form-group" ng-class="{ 'has-error': update.filename.$invalid && update.filename.$touched}">
+                    <label>Filename</label>
+                    <p ng-show="edit">{{episode.filename}}</p>
+                    <div ng-hide="edit" class="row">
+                      <div class="col-xs-9">
+                        <select ng-model="tempEpisode.filename" class="form-control" name="filename" required>
+                          <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
+                          <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
+                        </select>
+                        <br>
+                      </div>
+                      <div class="col-xs-3">
+                        <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
+                        <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
+                      </div>
                     </div>
-                    <div class="btn-group">
-                      <input ng-click="deleteEpisode(episode.id, $index)" class="btn btn-danger" type="button" value="Delete">
+                    <div ng-hide="edit" class="btn-toolbar">
+                      <div class="btn-group">
+                        <input class="btn btn-primary" type="submit" value="Update">
+                      </div>
+                      <div class="btn-group">
+                        <input ng-click="deleteEpisode(episode, update)" class="btn btn-danger" type="button" value="Delete">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -154,12 +160,16 @@
         })
       }
 
-      $scope.createEpisode = function() {
+      $scope.createEpisode = function(form) {
+        if($scope.filename === '' || $scope.title === '' || $scope.description == '') {
+          return;
+        }
         var params = {
           filename: $scope.filename,
           title: $scope.title,
           description: $scope.description
         };
+
         $http({
           method: 'POST',
           url: 'php/createEpisode.php',
@@ -170,6 +180,15 @@
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
             allowHtml: true
           });
+
+          if(form) {
+            form.$setPristine();
+            form.$setUntouched();
+          }
+
+          $scope.filename = '';
+          $scope.title = '';
+          $scope.description = '';
           $scope.episodes.push(episode);
           $scope.getFilenames();
         }).error(function(data) {
@@ -189,7 +208,11 @@
         });
       }
 
-      $scope.updateEpisode = function(episode) {
+      $scope.updateEpisode = function(episode, form) {
+        if(episode.filename === '' || episode.title === '' || episode.description == '') {
+          return;
+        }
+
         $http({
           method: 'POST',
           url: 'php/updateEpisode.php',
@@ -208,13 +231,14 @@
         });
       }
 
-      $scope.deleteEpisode = function(episodeID, index) {
+      $scope.deleteEpisode = function(episode) {
         $http({
           method: 'POST',
           url: 'php/deleteEpisode.php',
-          data: $.param({id: episodeID}),
+          data: $.param({id: episode.id}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data) {
+          var index = $scope.episodes.indexOf(episode);
           $scope.episodes.splice(index, 1);
           toastr.success('<p>The Episode was successfully deleted.</p>', 'Episode Deleted', {
             allowHtml: true
