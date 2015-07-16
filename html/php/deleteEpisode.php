@@ -5,7 +5,7 @@
 
   if(!$valid) {
     http_response_code(400);
-    echo '{"message": "Invalid Parameters - id: '.$id.',"success": false}';
+    echo '{"message": "Unable to delete the episode with the information provided.", "info": "Invalid Parameters - id: '.$id.',"success": false}';
     return;
   }
 
@@ -18,7 +18,7 @@
   }
   else {
     http_response_code(400);
-    echo '{"message": "'.getError().'", "query": "'.$query.'","success": false}';
+    echo '{"message":"There was a problem deleting the episode.", "info": "mysql error -'.getError().'", "query": "'.$query.'","success": false}';
   }
   closeConnection();
 ?>

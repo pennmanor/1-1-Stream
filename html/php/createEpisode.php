@@ -1,19 +1,17 @@
 <?php
-  require('mysql-connect.php');
 
+  if(!isset($_POST['filename']) || !isset($_POST['title']) || !isset($_POST['description'])) {
+    http_response_code(400);
+    echo '{"message": "Unable to create an episode with the information provided.", "info": "Invalid Parameters - filename: '.$filename.', title: '.$title.', description: '.$description.'","success": false}';
+    return;
+  }
+
+  require('mysql-connect.php');
   $filename = $_POST['filename'];
   $title = $_POST['title'];
   $description = $_POST['description'];
   $dir = VIDEO_DIR;
   $files = array();
-
-  $valid = !empty($filename) && !empty($title) && !empty($description);
-
-  if(!$valid) {
-    http_response_code(400);
-    echo '{"message": "Invalid Parameters - filename: '.$filename.', title: '.$title.', description: '.$description.'","success": false}';
-    return;
-  }
 
   if(is_dir($dir)) {
     if($dh = opendir($dir)) {
@@ -27,7 +25,7 @@
 
   if(!in_array($filename, $files)) {
     http_response_code(400);
-    echo '{"message": "The file \''.$filename.'\'" does not exist.","success": false}';
+    echo '{"message": "The file was not found.", "info": "The file \''.$filename.'\' does not exist.","success": false}';
     return;
   }
 
@@ -43,7 +41,7 @@
   }
   else {
     http_response_code(400);
-    echo '{"message": "'.getError().'", "query": "'.$query.'","success": false}';
+    echo '{"message":"There was a problem creating the episode.", "info": "mysql error -'.getError().'", "query": "'.$query.'","success": false}';
   }
   closeConnection();
 ?>
