@@ -13,6 +13,15 @@
       textarea {
         resize: vertical;
       }
+
+      .panel-heading .episode-title {
+        font-size: 1.5em;
+        cursor: pointer;
+      }
+
+      .panel-heading .form-group {
+        margin-bottom: 0;
+      }
     </style>
   </head>
   <body>
@@ -58,34 +67,44 @@
           <div class="form-group">
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
           </div>
-          <div ng-repeat="episode in episodes | filter:query | orderBy:'-id'" ng-init="tempEpisode = copy(episode)">
-            <form name="update" ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <div class="panel-title">
-                    <div class="row">
-                      <div class="col-xs-10">
-                        <div style="font-size: 1.5em;" ng-show="edit">{{episode.title}}</div>
-                        <div class="form-group" ng-class="{ 'has-error': update.title.$invalid && update.title.$touched}">
-                          <input ng-hide="edit" class="form-control" type="text" name="title" ng-model="tempEpisode.title" placeholder="Title" required>
-                        </div>
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <button ng-click="reorder('id')" class="btn btn-default">Order By ID</button>
+              <button ng-click="reorder('title')" class="btn btn-default">Order By Title</button>
+            </div>
+            <div class="btn-group">
+              <button ng-click="reverseOrder()" class="btn btn-default">Reverse Order</button>
+            </div>
+          </div>
+          <br>
+          <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <form  name="update" ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode)">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-xs-10">
+                    <div class="panel-title">
+                      <div class="episode-title" ng-show="edit">{{episode.title}}</div>
+                      <div class="form-group" ng-class="{ 'has-error': update.title.$invalid && update.title.$touched}">
+                        <input ng-hide="edit" class="form-control" type="text" name="title" ng-model="tempEpisode.title" placeholder="Title" required>
                       </div>
-                      <div class="col-xs-2">
-                        <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-info pull-right" value="Edit">
-                        <input type="button" ng-hide="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-default pull-right" value="Cancel">
-                      </div>
+                      <p ng-show="edit">{{episode.filename}}</p>
+                      <p ng-show="edit">{{episode.description}}</p>
                     </div>
                   </div>
+                  <div class="col-xs-2">
+                    <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-info pull-right" value="Edit">
+                    <input type="button" ng-hide="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-default pull-right" value="Cancel">
+                  </div>
                 </div>
+              </div>
+              <div id="panel-{{$index}}" class="panel-collapse collapse" ng-class="{ 'in':!edit }">
                 <div class="panel-body">
                   <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
                     <label>Description</label>
-                    <p ng-show="edit">{{episode.description}}</p>
                     <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
                   </div>
                   <div class="form-group" ng-class="{ 'has-error': update.filename.$invalid && update.filename.$touched}">
                     <label>Filename</label>
-                    <p ng-show="edit">{{episode.filename}}</p>
                     <div ng-hide="edit" class="row">
                       <div class="col-xs-9">
                         <select ng-model="tempEpisode.filename" class="form-control" name="filename" required>
@@ -112,7 +131,8 @@
               </div>
             </form>
           </div>
-        </div>
+
+          <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
       </div>
     </div>
   </body>
@@ -121,9 +141,10 @@
   <script type="text/javascript" src="js/angular-animate.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
+  <script type="text/javascript" src="js/dirPagination.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate']);
+    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination']);
     app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
       $animateProvider.classNameFilter(/animate/);
       $locationProvider.html5Mode({
@@ -135,15 +156,32 @@
         toastClass: 'toast animate'
       });
     }]);
+
     app.controller('EpisodeCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
       $scope.filenames = [];
       $scope.episodes = [];
+
+      //pagination
+      $scope.isReversed = true;
+      $scope.sortedBy = 'id';
+
+      $scope.setPage = function(pageNo) {
+        $scope.currentPage = pageNo;
+      };
 
       var fileFilter = 'NOT_IN_DB';
 
       $scope.changeFileFilter = function() {
         fileFilter = fileFilter === 'NOT_IN_DB' ? '': 'NOT_IN_DB';
         $scope.getFilenames();
+      }
+
+      $scope.reorder = function(sort) {
+        $scope.sortedBy = sort;
+      }
+
+      $scope.reverseOrder = function() {
+        $scope.isReversed = !$scope.isReversed;
       }
 
       $scope.copy = function (item) {
