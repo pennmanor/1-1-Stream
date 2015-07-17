@@ -22,11 +22,12 @@
       <h1 class="page-header text-center">1:1 Podcast Stream</h1>
       <div class="row">
         <div class="col-md-offset-2 col-md-8">
-          <video class="video-js vjs-default-skin" controls
+          <video id="videoStream" class="video-js vjs-default-skin"
+           controls
            preload="auto"
-           poster="images/pm-logo.jpg"
-           width="auto" height="auto"
-           data-setup="{}">
+           autoplay
+           poster="images/1to1-logo.png"
+           width="auto" height="auto">
            <source src="rtmp://<?php echo $_SERVER['SERVER_ADDR']; ?>/autoplay/autoplay" type="rtmp/mp4">
            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
           </video>
@@ -42,6 +43,15 @@
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript" src="js/video.js"></script>
   <script type="text/javascript">
-      videojs.options.flash.swf = "video-js.swf"
+  $(document).ready(function(){
+    var videoPlayer = videojs('videoStream');
+    var err;
+    videoPlayer.on('error', function(event){
+      if(event.target.outerText != null || event.target.outerText == "↵FLASH: rtmpconnectfailure"){
+        window.location = "episodes.html";
+      }
+    });
+  });
+  videojs.options.flash.swf = "video-js.swf";
   </script>
 </html>
