@@ -7,8 +7,8 @@
     <meta name="author" content="Benjamin Thomas">
     <title>Manage Videos</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
+    <link rel="stylesheet" href="styles/font-awesome.min.css">
     <style>
       textarea {
         resize: vertical;
@@ -37,7 +37,7 @@
         <div class="tab-pane fade" id="new">
           <form id="create" name="create" ng-submit="createEpisode(create)">
             <div class="form-group" ng-class="{ 'has-error': create.filename.$invalid && create.filename.$touched}">
-              <label>File</label>
+              <label class="control-label">File</label>
               <div class="row">
                 <div class="col-xs-9">
                   <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames" required>
@@ -51,11 +51,11 @@
               </div>
             </div>
             <div class="form-group" ng-class="{ 'has-error': create.title.$invalid && create.title.$touched}">
-              <label>Title</label>
+              <label class="control-label">Title</label>
               <input ng-model="title" class="form-control" type="text" name="title" placeholder="Title" required>
             </div>
-            <div class="form-group" ng-class="{ 'has-error': create.description.$invalid && create.description.$touched  }">
-              <label>Description</label>
+            <div class="form-group" ng-class="{ 'has-error': create.description.$invalid && create.description.$touched }">
+              <label class="control-label">Description</label>
               <textarea ng-model="description" class="form-control" name="description" rows="3" placeholder="Description" required></textarea>
             </div>
             <div class="form-group">
@@ -69,11 +69,9 @@
           </div>
           <div class="btn-toolbar">
             <div class="btn-group">
-              <button ng-click="reorder('id')" class="btn btn-default">Order By ID</button>
-              <button ng-click="reorder('title')" class="btn btn-default">Order By Title</button>
-            </div>
-            <div class="btn-group">
-              <button ng-click="reverseOrder()" class="btn btn-default">Reverse Order</button>
+              <button ng-click="reorder('id')" class="btn btn-default"><span class="fa fa-sort-numeric-asc"></span></button>
+              <button ng-click="reorder('title')" class="btn btn-default"><span class="fa fa-sort-alpha-asc"></span></button>
+              <button ng-click="reverseOrder()" class="btn btn-default"><span class="fa" ng-class="{'fa-sort-desc': isReversed, 'fa-sort-asc': !isReversed}" aria-hidden="true"></span></button>
             </div>
           </div>
           <br>
@@ -100,11 +98,11 @@
               <div id="panel-{{$index}}" class="panel-collapse collapse" ng-class="{ 'in':!edit }">
                 <div class="panel-body">
                   <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
-                    <label>Description</label>
+                    <label class="control-label">Description</label>
                     <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
                   </div>
                   <div class="form-group" ng-class="{ 'has-error': update.filename.$invalid && update.filename.$touched}">
-                    <label>Filename</label>
+                    <label class="control-label">Filename</label>
                     <div ng-hide="edit" class="row">
                       <div class="col-xs-9">
                         <select ng-model="tempEpisode.filename" class="form-control" name="filename" required>
