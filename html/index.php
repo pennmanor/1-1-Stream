@@ -7,7 +7,6 @@
     <meta name="author" content="Benjamin Thomas">
     <title>1:1 Podcast Stream</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
@@ -18,6 +17,29 @@
     </style>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">1:1 Stream</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Live<span class="sr-only">(current)</span></a></li>
+            <li><a href="episodes.html">Episodes</a></li>
+            <li><a href="manageEpisodes.php">Manage</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Exit</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container">
       <h1 class="page-header text-center">1:1 Podcast Stream</h1>
       <div class="row">
@@ -33,9 +55,23 @@
           </video>
         </div>
       </div>
-      <hr>
-      <div class="text-center lead">
-        <a href="episodes.html">View Past Episodes</a>
+    </div>
+    <!-- Stream Offline-->
+    <div class="modal fade" id="offlineModal" tabindex="-1" role="dialog" aria-labelledby="offlineModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="offlineModalLabel">Uh-oh!</h4>
+          </div>
+          <div class="modal-body">
+            It looks like this stream is offline. Would you like to view previous episodes?
+          </div>
+          <div class="modal-footer">
+            <a href="episodes.html"><button type="button" class="btn btn-success">Yes</button></a>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>
@@ -48,7 +84,8 @@
     var err;
     videoPlayer.on('error', function(event){
       if(event.target.outerText != null || event.target.outerText == "↵FLASH: rtmpconnectfailure"){
-        window.location = "episodes.html";
+      //  window.location = "episodes.html";
+      $('#offlineModal').modal('show');
       }
     });
   });

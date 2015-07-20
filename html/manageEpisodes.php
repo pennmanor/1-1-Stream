@@ -7,7 +7,6 @@
     <meta name="author" content="Benjamin Thomas">
     <title>Manage Videos</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <style>
       textarea {
@@ -25,12 +24,35 @@
     </style>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">1:1 Stream</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="index.php">Live</a></li>
+            <li><a href="episodes.html">Episodes</a></li>
+            <li class="active"><a href="manageEpisodes.php">Manage<span class="sr-only">(current)</span></a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Exit</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container" ng-controller="EpisodeCtrl">
       <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
-      <a class="btn btn-default pull-right" href="episodes.html">Exit</a>
+      <a class="btn btn-danger pull-right" href="episodes.html">Exit</a>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#new" data-toggle="tab">New</a></li>
-        <li role="presentation" class="active"><a href="#list" data-toggle="tab">List</a></li>
+        <li role="presentation"><a href="#create" data-toggle="tab">Create</a></li>
+        <li role="presentation" class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
       </ul>
       <br>
       <div class="tab-content">
@@ -45,7 +67,7 @@
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
+                  <input ng-click="changeFileFilter()" class="btn btn-warning pull-right" type="button" value="Change">
                   <input ng-click="getFilenames()" type="button" class="btn btn-info pull-right" value="Refresh">
                 </div>
               </div>
@@ -92,8 +114,8 @@
                     </div>
                   </div>
                   <div class="col-xs-2">
-                    <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-info pull-right" value="Edit">
-                    <input type="button" ng-hide="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-default pull-right" value="Cancel">
+                    <input type="button" ng-show="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-warning pull-right" value="Edit">
+                    <input type="button" ng-hide="edit" ng-click="edit = !edit" ng-init="edit = true" class="btn btn-danger pull-right" value="Cancel">
                   </div>
                 </div>
               </div>
@@ -120,7 +142,7 @@
                     </div>
                     <div ng-hide="edit" class="btn-toolbar">
                       <div class="btn-group">
-                        <input class="btn btn-primary" type="submit" value="Update">
+                        <input class="btn btn-success" type="submit" value="Update">
                       </div>
                       <div class="btn-group">
                         <input ng-click="deleteEpisode(episode, update)" class="btn btn-danger" type="button" value="Delete">
