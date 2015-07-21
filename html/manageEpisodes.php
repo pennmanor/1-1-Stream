@@ -229,6 +229,7 @@
             return value;
           })
         }).success(function(episode) {
+          episode.tags = [];
           console.log(episode);
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {

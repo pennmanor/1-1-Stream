@@ -4,40 +4,39 @@
   $tagsID = array();
   $tags = array();
   $id = $_GET['id'];
-  $result = getByValueFrom('id', $id, 'episode');
-  $result2 = getByValueFrom('episodeID', $id, 'tagLink');
 
-  while($tagLink = mysqli_fetch_assoc($result2)) {
-    $tagsID[] = $tagLink['tagID'];
-  }
-
-  if(count($tagsID) > 0) {
-    $tagCount = 0;
-    $query2 = 'SELECT * FROM `tag` WHERE ';
-    foreach ($tagsID as $index => $tagID) {
-      $tagCount++;
-      $query2 .= '`id` = \''.$tagID.'\'';
-      if(count($tagsID) == $tagCount) {
-        $query2 .= ';';
-      }
-      else {
-        $query2 .= ' OR ';
-      }
-    }
-
-    $result3 = runQuery($query2);
-
-    while($tag = mysqli_fetch_assoc($result3)) {
-      $tag['id'] = intval($tag['id']);
-      $tags[$tag['id']] = $tag;
-    }
-  }
+  $query = 'SELECT e.id, e.filename, e.title, e.description, e.viewable, t.name as tagName, t.id as tagID FROM (episode e LEFT JOIN tagLink tl ON e.id = tl.episodeID) LEFT JOIN tag t on t.id = tl.tagID WHERE e.id="'.$id.'" ORDER BY e.id';
+  $result = runQuery($query);
 
   closeConnection();
-  if(!$episode = mysqli_fetch_assoc($result)) {
+
+
+  if(mysqli_affected_rows($connection) == 0) {
     http_response_code(404);
     echo "404";
     return;
+  }
+
+  $episode = null;
+
+  while($row = mysqli_fetch_assoc($result)) {
+    if(isset($row['tagID']) && $row['tagName']) {
+      $tag = array(
+        'id' => intval($row['tagID']),
+        'name' => $row['tagName']
+      );
+    }
+    unset($row['tagName']);
+    unset($row['tagID']);
+    $row['id'] = intval($row['id']);
+    if(!isset($episode)) {
+      $row['tags'] = array();
+      $episode = $row;
+    }
+    if(isset($tag)) {
+      $episode['tags'][] = $tag;
+    }
+    unset($tag);
   }
 ?>
 
@@ -78,7 +77,7 @@
           <p class="lead"><?php echo $episode['description']?></p>
           <p class="lead">
             <?php
-            foreach ($tags as $tag) {
+            foreach ($episode['tags'] as $tag) {
               echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
             }
             ?>
