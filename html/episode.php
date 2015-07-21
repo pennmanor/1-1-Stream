@@ -1,8 +1,11 @@
 <?php
   require dirname(__FILE__).'/php/mysql-connect.php';
   openConnection();
-  $tagsID = array();
-  $tags = array();
+  if(!isset($_GET['id'])) {
+    http_response_code(400);
+    echo 'Bad Request';
+    return;
+  }
   $id = $_GET['id'];
 
   $query = 'SELECT e.id, e.filename, e.title, e.description, e.viewable, t.name as tagName, t.id as tagID FROM (episode e LEFT JOIN tagLink tl ON e.id = tl.episodeID) LEFT JOIN tag t on t.id = tl.tagID WHERE e.id="'.$id.'" ORDER BY e.id';
