@@ -1,8 +1,38 @@
 <?php
   require dirname(__FILE__).'/php/mysql-connect.php';
   openConnection();
+  $tagsID = array();
+  $tags = array();
   $id = $_GET['id'];
   $result = getByValueFrom('id', $id, 'episode');
+  $result2 = getByValueFrom('episodeID', $id, 'tagLink');
+
+  while($tagLink = mysqli_fetch_assoc($result2)) {
+    $tagsID[] = $tagLink['tagID'];
+  }
+
+  if(count($tagsID) > 0) {
+    $tagCount = 0;
+    $query2 = 'SELECT * FROM `tag` WHERE ';
+    foreach ($tagsID as $index => $tagID) {
+      $tagCount++;
+      $query2 .= '`id` = \''.$tagID.'\'';
+      if(count($tagsID) == $tagCount) {
+        $query2 .= ';';
+      }
+      else {
+        $query2 .= ' OR ';
+      }
+    }
+
+    $result3 = runQuery($query2);
+
+    while($tag = mysqli_fetch_assoc($result3)) {
+      $tag['id'] = intval($tag['id']);
+      $tags[$tag['id']] = $tag;
+    }
+  }
+
   closeConnection();
   if(!$episode = mysqli_fetch_assoc($result)) {
     http_response_code(404);
@@ -46,6 +76,13 @@
         </div>
         <div class="col-md-5">
           <p class="lead"><?php echo $episode['description']?></p>
+          <p class="lead">
+            <?php
+            foreach ($tags as $tag) {
+              echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
+            }
+            ?>
+          </p>
         </div>
       </div>
       <hr>

@@ -109,13 +109,27 @@
                           <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
                           <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
                         </select>
-                        <br>
                       </div>
                       <div class="col-xs-3">
                         <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
                         <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
                       </div>
                     </div>
+                    <br>
+                    <div class="btn-toolbar" ng-if="episode.tags.length > 0">
+                      <div class="btn-group" role="group" ng-repeat="tag in episode.tags">
+                        <button class="btn btn-default" type="button">{{tag.name}}</button>
+                        <button ng-click="removeTag(episode, tag)" class="btn btn-default" type="button">x</button>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="input-group col-md-9">
+                      <input class="form-control" type="text" ng-model="tagName" placeholder="Add Tag...">
+                      <span class="input-group-btn">
+                        <button ng-click="addTag(episode, tagName);tagName=null" class="btn btn-default" type="button">Add Tag</button>
+                      </span>
+                    </div>
+                    <br>
                     <div ng-hide="edit" class="btn-toolbar">
                       <div class="btn-group">
                         <input class="btn btn-primary" type="submit" value="Update">
@@ -129,7 +143,6 @@
               </div>
             </form>
           </div>
-
           <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
       </div>
     </div>
@@ -211,7 +224,7 @@
           url: 'php/createEpisode.php',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
@@ -259,7 +272,7 @@
           url: 'php/updateEpisode.php',
           data: $.param(episode),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
@@ -282,7 +295,7 @@
           url: 'php/deleteEpisode.php',
           data: $.param({id: episode.id}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
@@ -300,12 +313,64 @@
         });
       }
 
-      function appendTransform(defaults, transform) {
+      $scope.addTag = function(episode, tagName) {
+        if(!tagName || tagName === ' ') {
+          return;
+        }
+        var params = {
+          episodeID: episode.id,
+          name: tagName
+        };
+
+        $http({
+          method: 'POST',
+          url: 'php/addTag.php',
+          data: $.param(params),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
+        }).success(function(data) {
+          episode.tags.push(data.tag);
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Tag Creation Failed');
+          console.error('EpisodeCtrl Error - addTag: ', arguments);
+        });
+      }
+
+      $scope.removeTag = function(episode, tag) {
+        console.log(episode.id, tag.id);
+        var params = {
+          episodeID: episode.id,
+          tagID: tag.id
+        };
+
+        $http({
+          method: 'POST',
+          url: 'php/removeTag.php',
+          data: $.param(params),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
+        }).success(function(data) {
+          episode.tags.splice(episode.tags.indexOf(tag), 1);
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Tag Removal Failed');
+          console.error('EpisodeCtrl Error - removeTag: ', arguments);
+        });
+      }
+
+      function prependTramform(defaults, transform) {
 
         // We can't guarantee that the default transformation is an array
         defaults = angular.isArray(defaults) ? defaults : [defaults];
 
-        // Append the new transformation to the defaults
+        // prepend the new transformation to the defaults
         defaults.unshift(transform);
         return defaults;
       }
