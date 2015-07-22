@@ -7,6 +7,7 @@
     <meta name="author" content="Benjamin Thomas">
     <title>1:1 Podcast Stream</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
@@ -55,6 +56,9 @@
           </video>
         </div>
       </div>
+    </div>
+    <div class="navbar-bottom">
+      <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
     </div>
     <!-- Stream Offline-->
     <div class="modal fade" id="offlineModal" tabindex="-1" role="dialog" aria-labelledby="offlineModalLabel">

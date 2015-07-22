@@ -52,6 +52,7 @@
     <meta name="author" content="Benjamin Thomas">
     <title>1:1 Podcast Episode: <?php echo $episode['title']; ?></title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
@@ -86,7 +87,6 @@
       </div>
     </nav>
     <div class="container">
-
       <div class="row">
         <div class="col-md-offset-2 col-md-8">
           <h1 class="page-header"><?php echo $episode['title']?></h1>
@@ -112,6 +112,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="navbar-bottom">
+      <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>
