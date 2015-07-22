@@ -7,7 +7,7 @@
     return;
   }
   $q = mysqli_escape_string($connection, $_GET['q']);
-  $query = 'SELECT t.id, t.name, e.title as episodeTitle, e.id as episodeID FROM (tag t LEFT JOIN tagLink tl on t.id = tl.tagID) LEFT JOIN episode e on e.id = tl.episodeID WHERE t.name LIKE \'%'.$q.'%\'; ';
+  $query = 'SELECT t.id, t.name, e.title as episodeTitle, e.id as episodeID FROM tag t JOIN tagLink tl on t.id = tl.tagID JOIN episode e on e.id = tl.episodeID WHERE t.name LIKE \'%'.$q.'%\'; ';
   $result = runQuery($query);
 
   closeConnection();
