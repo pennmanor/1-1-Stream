@@ -5,7 +5,7 @@
 
   if(!$valid) {
     http_response_code(400);
-    echo '{"message": "Unable to delete the episode with the information provided.", "info": "Invalid Parameters - id: '.$id.',"success": false}';
+    echo '{"message": "Unable to delete the episode with the information provided.", "info": "Invalid Parameters - id: '.$_POST['id'].',"success": false}';
     return;
   }
 

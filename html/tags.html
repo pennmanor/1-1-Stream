@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="viewEpisodes">
+<html ng-app="viewTags">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,24 +10,33 @@
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
   </head>
   <body>
-    <div class="container" ng-controller="EpisodeCtrl">
-      <h1 class="page-header">1:1 Podcast Episodes</h1>
+    <div class="container" ng-controller="TagCtrl">
+      <h1 class="page-header">1:1 Podcast Episode Tags</h1>
       <br>
-      <div ng-repeat="episode in episodes | filter:query | orderBy:'-id'">
+      <form ng-submit="getTags()">
+        <div class="form-group">
+          <label class="control-label">Search Tags</label>
+          <input ng-model="q" class="form-control" type="text" name="q" placeholder="Search Tags..">
+        </div>
+        <div class="form-group">
+          <input class="btn btn-primary" type="button" value="Search">
+        </div>
+      </form>
+      <div ng-repeat="tag in tags">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div class="panel-title" style="font-size: 1.5em;">{{episode.title}}</div>
+            <span style="font-size: 1.5em" class="label label-info">{{tag.name}}</span>
           </div>
-          <div class="panel-body">
-            <label>Description</label>
-            <p>{{episode.description}}</p>
-            <label>Tags</label>
-            <div ng-if="episode.tags.length > 0">
-              <span ng-repeat="tag in episode.tags"><span class="label label-info">{{tag.name}}</span>&nbsp;</span>
-            </div>
-            <br>
-            <p><a class="btn btn-info" href="episode.php?id={{episode.id}}">View</a></p>
-          </div>
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="episode in tag.episodes">
+              <p>
+                {{episode.title}}
+                <a class="btn btn-info pull-right" href="episode.php?id={{episode.id}}">View</a>
+              </p>
+
+
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -40,7 +49,7 @@
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script src="js/video.js"></script>
   <script type="text/javascript">
-    var app = angular.module('viewEpisodes', ['toastr', 'ngAnimate']);
+    var app = angular.module('viewTags', ['toastr', 'ngAnimate']);
     app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
       $animateProvider.classNameFilter(/animate/);
       $locationProvider.html5Mode({
@@ -52,20 +61,20 @@
         toastClass: 'toast animate'
       });
     }]);
-    app.controller('EpisodeCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
-      $scope.episodes = [];
+    app.controller('TagCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
+      $scope.tags = [];
 
-      $scope.getEpisodes = function() {
-        $http.get('php/getEpisodes.php').success(function(episodes) {
-          $scope.episodes = episodes;
+      $scope.getTags = function() {
+        $http.get('php/tagSearch.php?q=' + $scope.q).success(function(tags) {
+          $scope.tags = tags;
         }).error(function(data) {
           var responce = data.message ? data.message : 'There was a problem getting the Episodes.'
           toastr.warning(responce, 'Fetching Episodes Failed');
-          console.error('EpisodeCtrl Error - getEpisodes:', arguments);
+          console.error('TagCtrl Error - getTags:', arguments);
         });
       }
 
-      $scope.getEpisodes();
+      $scope.getTags();
     }]);
   </script>
 </html>
