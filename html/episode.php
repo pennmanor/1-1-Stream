@@ -52,7 +52,7 @@
     <meta name="author" content="Benjamin Thomas">
     <title>1:1 Podcast Episode: <?php echo $episode['title']; ?></title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
@@ -63,34 +63,58 @@
     </style>
   </head>
   <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">1:1 Stream</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="index.php">Live</a></li>
+            <li><a href="episodes.html">Episodes</a></li>
+            <li><a href="manageEpisodes.php">Manage</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Exit</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <div class="container">
-      <h1 class="page-header"><?php echo $episode['title']?></h1>
       <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-offset-2 col-md-8">
+          <h1 class="page-header"><?php echo $episode['title']?></h1>
           <video class="video-js vjs-default-skin" controls
            preload="auto"
-           poster="images/pm-logo.jpg"
+           poster="images/1to1-logo.png"
            width="auto" height="auto"
            data-setup="{}">
            <source src="videos/<?php echo $episode['filename'] ?>" type="video/mp4">
            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
           </video>
         </div>
-        <div class="col-md-5">
-          <p class="lead"><?php echo $episode['description']?></p>
-          <p class="lead">
-            <?php
-            foreach ($episode['tags'] as $tag) {
-              echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
-            }
-            ?>
-          </p>
+        <div class="col-md-offset-2 col-md-8">
+          <div class="well">
+            <p><?php echo $episode['description']?></p>
+            <p class="lead">
+              <?php
+              foreach ($episode['tags'] as $tag) {
+                echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
+              }
+              ?>
+            </p>
+          </div>
         </div>
       </div>
-      <hr>
-      <div class="text-center lead">
-        <a href="episodes.html">View All Episodes</a>
-      </div>
+    </div>
+    <div class="navbar-bottom">
+      <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>
