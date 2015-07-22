@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="navbar-bottom">
-      <h6>&copy2015 Ben Thomas, Collin Enders</h6>
+      <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
     </div>
     <!-- Stream Offline-->
     <div class="modal fade" id="offlineModal" tabindex="-1" role="dialog" aria-labelledby="offlineModalLabel">
