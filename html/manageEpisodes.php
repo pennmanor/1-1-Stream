@@ -7,6 +7,7 @@
     <meta name="author" content="Benjamin Thomas">
     <title>Manage Videos</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <style>
       textarea {
@@ -51,8 +52,8 @@
       <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
       <a class="btn btn-danger pull-right" href="episodes.html">Exit</a>
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#create" data-toggle="tab">Create</a></li>
-        <li role="presentation" class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
+        <li role="presentation"><a href="#new" data-toggle="tab">Create</a></li>
+        <li role="presentation" class="active"><a href="#list" data-toggle="tab">Edit</a></li>
       </ul>
       <br>
       <div class="tab-content">
@@ -153,9 +154,12 @@
               </div>
             </form>
           </div>
-
           <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+        </div>
       </div>
+    </div>
+    <div class="navbar-bottom">
+      <h6>&copy2015 Ben Thomas, Collin Enders</h6>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>
