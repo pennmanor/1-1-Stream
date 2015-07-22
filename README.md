@@ -1,4 +1,4 @@
-# 1:1 Stream 0.1.1
+# 1:1 Stream 0.1.2
 
 NGINX RTMP Server
 
