@@ -2,7 +2,7 @@
 
   if(!isset($_POST['filename']) || !isset($_POST['title']) || !isset($_POST['description'])) {
     http_response_code(400);
-    echo '{"message": "Unable to create an episode with the information provided.", "info": "Invalid Parameters - filename: '.$filename.', title: '.$title.', description: '.$description.'","success": false}';
+    echo '{"message": "Unable to create an episode with the information provided.", "info": "Invalid Parameters - filename: '.$_POST['filename'].', title: '.$_POST['title'].', description: '.$_POST['description'].'","success": false}';
     return;
   }
 

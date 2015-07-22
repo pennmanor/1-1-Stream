@@ -8,6 +8,7 @@
     <title>Manage Videos</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
+    <link rel="stylesheet" href="styles/font-awesome.min.css">
     <style>
       textarea {
         resize: vertical;
@@ -59,7 +60,7 @@
         <div class="tab-pane fade" id="new">
           <form id="create" name="create" ng-submit="createEpisode(create)">
             <div class="form-group" ng-class="{ 'has-error': create.filename.$invalid && create.filename.$touched}">
-              <label>File</label>
+              <label class="control-label">File</label>
               <div class="row">
                 <div class="col-xs-9">
                   <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames" required>
@@ -73,11 +74,11 @@
               </div>
             </div>
             <div class="form-group" ng-class="{ 'has-error': create.title.$invalid && create.title.$touched}">
-              <label>Title</label>
+              <label class="control-label">Title</label>
               <input ng-model="title" class="form-control" type="text" name="title" placeholder="Title" required>
             </div>
-            <div class="form-group" ng-class="{ 'has-error': create.description.$invalid && create.description.$touched  }">
-              <label>Description</label>
+            <div class="form-group" ng-class="{ 'has-error': create.description.$invalid && create.description.$touched }">
+              <label class="control-label">Description</label>
               <textarea ng-model="description" class="form-control" name="description" rows="3" placeholder="Description" required></textarea>
             </div>
             <div class="form-group">
@@ -91,11 +92,9 @@
           </div>
           <div class="btn-toolbar">
             <div class="btn-group">
-              <button ng-click="reorder('id')" class="btn btn-default">Order By ID</button>
-              <button ng-click="reorder('title')" class="btn btn-default">Order By Title</button>
-            </div>
-            <div class="btn-group">
-              <button ng-click="reverseOrder()" class="btn btn-default">Reverse Order</button>
+              <button ng-click="reorder('id')" class="btn btn-default"><span class="fa fa-sort-numeric-asc"></span></button>
+              <button ng-click="reorder('title')" class="btn btn-default"><span class="fa fa-sort-alpha-asc"></span></button>
+              <button ng-click="reverseOrder()" class="btn btn-default"><span class="fa" ng-class="{'fa-sort-desc': isReversed, 'fa-sort-asc': !isReversed}" aria-hidden="true"></span></button>
             </div>
           </div>
           <br>
@@ -122,24 +121,38 @@
               <div id="panel-{{$index}}" class="panel-collapse collapse" ng-class="{ 'in':!edit }">
                 <div class="panel-body">
                   <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
-                    <label>Description</label>
+                    <label class="control-label">Description</label>
                     <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
                   </div>
                   <div class="form-group" ng-class="{ 'has-error': update.filename.$invalid && update.filename.$touched}">
-                    <label>Filename</label>
+                    <label class="control-label">Filename</label>
                     <div ng-hide="edit" class="row">
                       <div class="col-xs-9">
                         <select ng-model="tempEpisode.filename" class="form-control" name="filename" required>
                           <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
                           <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
                         </select>
-                        <br>
                       </div>
                       <div class="col-xs-3">
                         <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
                         <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
                       </div>
                     </div>
+                    <br>
+                    <div class="btn-toolbar" ng-if="episode.tags.length > 0">
+                      <div class="btn-group" role="group" ng-repeat="tag in episode.tags">
+                        <button class="btn btn-default" type="button">{{tag.name}}</button>
+                        <button ng-click="removeTag(episode, tag)" class="btn btn-default" type="button">x</button>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="input-group col-md-9">
+                      <input class="form-control" type="text" ng-model="tagName" placeholder="Add Tag...">
+                      <span class="input-group-btn">
+                        <button ng-click="addTag(episode, tagName);tagName=null" class="btn btn-default" type="button">Add Tag</button>
+                      </span>
+                    </div>
+                    <br>
                     <div ng-hide="edit" class="btn-toolbar">
                       <div class="btn-group">
                         <input class="btn btn-success" type="submit" value="Update">
@@ -153,7 +166,6 @@
               </div>
             </form>
           </div>
-
           <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
       </div>
     </div>
@@ -235,11 +247,12 @@
           url: 'php/createEpisode.php',
           data: $.param(params),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
         }).success(function(episode) {
+          episode.tags = [];
           console.log(episode);
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
@@ -283,7 +296,7 @@
           url: 'php/updateEpisode.php',
           data: $.param(episode),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
@@ -306,7 +319,7 @@
           url: 'php/deleteEpisode.php',
           data: $.param({id: episode.id}),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: appendTransform($http.defaults.transformResponse, function(value) {
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
             return value;
           })
@@ -324,12 +337,64 @@
         });
       }
 
-      function appendTransform(defaults, transform) {
+      $scope.addTag = function(episode, tagName) {
+        if(!tagName || tagName === ' ') {
+          return;
+        }
+        var params = {
+          episodeID: episode.id,
+          name: tagName
+        };
+
+        $http({
+          method: 'POST',
+          url: 'php/addTag.php',
+          data: $.param(params),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
+        }).success(function(data) {
+          episode.tags.push(data.tag);
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Tag Creation Failed');
+          console.error('EpisodeCtrl Error - addTag: ', arguments);
+        });
+      }
+
+      $scope.removeTag = function(episode, tag) {
+        console.log(episode.id, tag.id);
+        var params = {
+          episodeID: episode.id,
+          tagID: tag.id
+        };
+
+        $http({
+          method: 'POST',
+          url: 'php/removeTag.php',
+          data: $.param(params),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
+            console.log(value);
+            return value;
+          })
+        }).success(function(data) {
+          episode.tags.splice(episode.tags.indexOf(tag), 1);
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+          toastr.warning(responce, 'Tag Removal Failed');
+          console.error('EpisodeCtrl Error - removeTag: ', arguments);
+        });
+      }
+
+      function prependTramform(defaults, transform) {
 
         // We can't guarantee that the default transformation is an array
         defaults = angular.isArray(defaults) ? defaults : [defaults];
 
-        // Append the new transformation to the defaults
+        // prepend the new transformation to the defaults
         defaults.unshift(transform);
         return defaults;
       }
