@@ -51,8 +51,10 @@
             <div id="collapse{{episode.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{episode.id}}">
               <div class="panel-body">
                 <p>{{episode.description}}</p>
-                <label>Tags</label>
                 <div ng-if="episode.tags.length > 0">
+                  <p>
+                    <label>Tags</label>
+                  </p>
                   <span ng-repeat="tag in episode.tags"><span class="label label-info">{{tag.name}}</span>&nbsp;</span>
                 </div>
               </div>

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
     <link rel="stylesheet" href="styles/font-awesome.min.css">
+    <link rel="stylesheet" href="styles/ng-tags-input.min.css">
+    <link rel="stylesheet" href="styles/ng-tags-input.bootstrap.min.css">
     <style>
       textarea {
         resize: vertical;
@@ -100,7 +102,7 @@
           </div>
           <br>
           <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <form  name="update" ng-submit="updateEpisode(tempEpisode); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode)">
+            <form  name="update" ng-submit="updateEpisode(tempEpisode, addedTags, removedTags); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode); addedTags = []; removedTags = [];">
               <div class="panel-heading">
                 <div class="row">
                   <div class="col-xs-10">
@@ -140,19 +142,7 @@
                       </div>
                     </div>
                     <br>
-                    <div class="btn-toolbar" ng-if="episode.tags.length > 0">
-                      <div class="btn-group" role="group" ng-repeat="tag in episode.tags">
-                        <button class="btn btn-default" type="button">{{tag.name}}</button>
-                        <button ng-click="removeTag(episode, tag)" class="btn btn-default" type="button">x</button>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="input-group col-md-9">
-                      <input class="form-control" type="text" ng-model="tagName" placeholder="Add Tag...">
-                      <span class="input-group-btn">
-                        <button ng-click="addTag(episode, tagName);tagName=null" class="btn btn-default" type="button">Add Tag</button>
-                      </span>
-                    </div>
+                    <tags-input display-property="name" replace-spaces-with-dashes="false" ng-model="tempEpisode.tags" on-tag-added="preAddTag($tag, addedTags)" on-tag-removed="preRemoveTag($tag, removedTags)"></tags-input>
                     <br>
                     <div ng-hide="edit" class="btn-toolbar">
                       <div class="btn-group">
@@ -181,9 +171,10 @@
   <script type="text/javascript" src="js/angular-toastr.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
   <script type="text/javascript" src="js/dirPagination.js"></script>
+  <script type="text/javascript" src="js/ng-tags-input.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination']);
+    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination', 'ngTagsInput']);
     app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
       $animateProvider.classNameFilter(/animate/);
       $locationProvider.html5Mode({
@@ -291,15 +282,25 @@
         });
       }
 
-      $scope.updateEpisode = function(episode, form) {
-        if(episode.filename === '' || episode.title === '' || episode.description == '') {
+      $scope.updateEpisode = function(tempEpisode, addedTags, removeTags) {
+        if(tempEpisode.filename === '' || tempEpisode.title === '' || tempEpisode.description == '') {
           return;
         }
+
+        for(var i in addedTags) {
+          $scope.addTag(tempEpisode, addedTags[i].name);
+        }
+
+        for(var i in removeTags) {
+          $scope.removeTag(tempEpisode, removeTags[i]);
+        }
+
+        console.log('tags: ', addedTags, removeTags);
 
         $http({
           method: 'POST',
           url: 'php/updateEpisode.php',
-          data: $.param(episode),
+          data: $.param(tempEpisode),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
             console.log(value);
@@ -402,6 +403,17 @@
         // prepend the new transformation to the defaults
         defaults.unshift(transform);
         return defaults;
+      }
+
+      $scope.preAddTag = function($tag, addedTags) {
+        addedTags.push($tag);
+      }
+
+      $scope.preRemoveTag = function($tag, removedTags) {
+        if($tag.id) {
+          removedTags.push($tag);
+        }
+
       }
 
       $scope.getFilenames();
