@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <!DOCTYPE html>
 <html ng-app="ManageVideos">
   <head>
@@ -42,18 +45,22 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="index.php" target="_self">Live</a></li>
-            <li><a href="episodes.html" target="_self">Episodes</a></li>
+            <li><a href="episodes.php" target="_self">Episodes</a></li>
             <li class="active"><a href="manageEpisodes.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Exit</a></li>
+            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
+                <li><a href="#">Logout</a></li>
+            <?php } else{ ?>
+              <li><a href="#">Login</a></li>
+            <?php } ?>
           </ul>
         </div>
       </div>
     </nav>
     <div class="container" ng-controller="EpisodeCtrl">
       <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
-      <a class="btn btn-danger pull-right" href="episodes.html">Exit</a>
+      <a class="btn btn-danger pull-right" href="episodes.php">Exit</a>
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#new" data-toggle="tab">Create</a></li>
         <li role="presentation" class="active"><a href="#list" data-toggle="tab">Edit</a></li>
@@ -157,7 +164,9 @@
               </div>
             </form>
           </div>
-          <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+          <div class="text-center">
+            <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+          </div>
         </div>
       </div>
     </div>

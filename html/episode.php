@@ -1,4 +1,6 @@
 <?php
+  session_start();
+
   require dirname(__FILE__).'/php/mysql-connect.php';
   openConnection();
   if(!isset($_GET['id'])) {
@@ -77,11 +79,15 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="index.php" target="_self">Live</a></li>
-            <li><a href="episodes.html" target="_self">Episodes</a></li>
+            <li><a href="episodes.php" target="_self">Episodes</a></li>
             <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Exit</a></li>
+            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
+                <li><a href="#">Logout</a></li>
+            <?php } else{ ?>
+              <li><a href="#">Login</a></li>
+            <?php } ?>
           </ul>
         </div>
       </div>
