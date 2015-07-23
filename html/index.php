@@ -36,7 +36,9 @@
           <ul class="nav navbar-nav">
             <li class="active"><a href="#" target="_self">Live<span class="sr-only">(current)</span></a></li>
             <li><a href="episodes.php" target="_self">Episodes</a></li>
-            <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
+              <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+            <?php } ?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
@@ -99,7 +101,7 @@
             <form action="php/login.php" method="POST">
               <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control" name="email" placeholder="Email">
+                <input type="email" class="form-control" name="email" placeholder="Email" autofocus>
               </div>
               <div class="form-group">
                 <label>Password</label>
