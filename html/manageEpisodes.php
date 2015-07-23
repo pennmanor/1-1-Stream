@@ -41,9 +41,9 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li><a href="index.php">Live</a></li>
-            <li><a href="episodes.html">Episodes</a></li>
-            <li class="active"><a href="manageEpisodes.php">Manage<span class="sr-only">(current)</span></a></li>
+            <li><a href="index.php" target="_self">Live</a></li>
+            <li><a href="episodes.html" target="_self">Episodes</a></li>
+            <li class="active"><a href="manageEpisodes.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Exit</a></li>
