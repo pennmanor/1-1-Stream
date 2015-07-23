@@ -102,13 +102,14 @@
         <div class="col-md-offset-2 col-md-8">
           <div class="well">
             <p><?php echo $episode['description']?></p>
-            <p class="lead">
+            <span>
+              Tags:
               <?php
               foreach ($episode['tags'] as $tag) {
                 echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
               }
               ?>
-            </p>
+            </span>
           </div>
         </div>
       </div>

@@ -52,9 +52,7 @@
               <div class="panel-body">
                 <p>{{episode.description}}</p>
                 <div ng-if="episode.tags.length > 0">
-                  <p>
-                    <label>Tags</label>
-                  </p>
+                  <label>Tags:</label>
                   <span ng-repeat="tag in episode.tags"><span class="label label-info">{{tag.name}}</span>&nbsp;</span>
                 </div>
               </div>
