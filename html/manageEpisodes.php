@@ -1,3 +1,10 @@
+<?php
+  session_start();
+  if(!isSet($_SESSION['userPermission'])){
+    header('Location:index.php');
+    die();
+  }
+?>
 <!DOCTYPE html>
 <html ng-app="ManageVideos">
   <head>
@@ -37,23 +44,23 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.php">1:1 Stream</a>
+          <a class="navbar-brand" href="index.php" target="_self">1:1 Stream</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="index.php" target="_self">Live</a></li>
-            <li><a href="episodes.html" target="_self">Episodes</a></li>
+            <li><a href="episodes.php" target="_self">Episodes</a></li>
             <li class="active"><a href="manageEpisodes.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Exit</a></li>
+            <li><a href="php/logout.php" target="_self">Logout</a></li>
           </ul>
         </div>
       </div>
     </nav>
     <div class="container" ng-controller="EpisodeCtrl">
       <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
-      <a class="btn btn-danger pull-right" href="episodes.html">Exit</a>
+      <a class="btn btn-danger pull-right" href="episodes.php">Exit</a>
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#new" data-toggle="tab">Create</a></li>
         <li role="presentation" class="active"><a href="#list" data-toggle="tab">Edit</a></li>
@@ -157,7 +164,9 @@
               </div>
             </form>
           </div>
-          <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+          <div class="text-center">
+            <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+          </div>
         </div>
       </div>
     </div>
