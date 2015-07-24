@@ -1,4 +1,6 @@
 <?php
+  session_start();
+
   require dirname(__FILE__).'/php/mysql-connect.php';
   openConnection();
   if(!isset($_GET['id'])) {
@@ -77,11 +79,17 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li><a href="index.php" target="_self">Live</a></li>
-            <li><a href="episodes.html" target="_self">Episodes</a></li>
-            <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+            <li><a href="episodes.php" target="_self">Episodes</a></li>
+            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
+              <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+            <?php } ?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Exit</a></li>
+            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
+                <li><a href="php/logout.php">Logout</a></li>
+            <?php } else{ ?>
+              <li><a data-toggle="modal" data-target="#loginModal">Login</a></li>
+            <?php } ?>
           </ul>
         </div>
       </div>
@@ -102,19 +110,48 @@
         <div class="col-md-offset-2 col-md-8">
           <div class="well">
             <p><?php echo $episode['description']?></p>
-            <p class="lead">
+            <span>
+              Tags:
               <?php
               foreach ($episode['tags'] as $tag) {
                 echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
               }
               ?>
-            </p>
+            </span>
           </div>
         </div>
       </div>
     </div>
     <div class="navbar-bottom">
       <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
+    </div>
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="loginModalLabel">Login</h4>
+          </div>
+          <div class="modal-body">
+            <form action="php/login.php" method="POST">
+              <div class="form-group">
+                <label>Email address</label>
+                <input type="email" class="form-control" name="email" placeholder="Email" autofocus>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="passwordHash" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-success pull-right">Login</button>
+                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cancel</button>
+                <div class="clearfix"></div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>
