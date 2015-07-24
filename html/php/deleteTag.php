@@ -1,5 +1,7 @@
+
 <?php
   $id = $_POST['id'];
+
 
   $valid = !empty($id);
 
@@ -13,7 +15,7 @@
   openConnection();
 
   $safeID = mysqli_escape_string($connection, $id);
-  $query = "DELETE e, tl FROM episode e LEFT JOIN tagLink tl ON e.id = tl.episodeID WHERE e.id = $safeID;";
+  $query = "DELETE t, tl FROM tag t LEFT JOIN tagLink tl ON t.id = tl.tagID WHERE t.id = $safeID;";
   if(runQuery($query)) {
     echo "{\"id\": $id}";
   }

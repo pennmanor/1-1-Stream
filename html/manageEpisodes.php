@@ -64,11 +64,12 @@
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#new" data-toggle="tab">Create</a></li>
         <li role="presentation" class="active"><a href="#list" data-toggle="tab">Edit</a></li>
+        <li role="presentation"><a href="#tag" data-toggle="tab">Tags</a></li>
       </ul>
       <br>
       <div class="tab-content">
         <div class="tab-pane fade" id="new">
-          <form id="create" name="create" ng-submit="createEpisode(create)">
+          <form name="create" ng-submit="createEpisode(create)">
             <div class="form-group" ng-class="{ 'has-error': create.filename.$invalid && create.filename.$touched}">
               <label class="control-label">File</label>
               <div class="row">
@@ -170,6 +171,24 @@
             <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
           </div>
         </div>
+        <div class="tab-pane fade" id="tag">
+          <form name="createLabel" ng-submit="createTag()">
+            <div class="input-group">
+              <input class="form-control" type="text" ng-model="tagName" placeholder="New Tag">
+              <span class="input-group-btn">
+                <input class="btn btn-primary" type="submit" value="Create">
+              </span>
+            </div>
+          </form>
+          <br>
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="tag in tags | orderBy:'-id'">
+              <p class="pull-left">{{tag.name}}</p>
+              <button ng-click="deleteTag(tag)" class="btn btn-sm btn-danger pull-right">Delete</button>
+              <div class="clearfix"></div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="navbar-bottom">
@@ -212,6 +231,7 @@
     app.controller('EpisodeCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
       $scope.filenames = [];
       $scope.episodes = [];
+      $scope.tags = [];
 
       //pagination
       $scope.isReversed = true;
@@ -329,6 +349,7 @@
             allowHtml: true
           });
           $scope.getFilenames();
+          $scope.updateTagsList();
         }).error(function(data) {
           var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Episode Update Failed');
@@ -357,7 +378,12 @@
       }
 
       $scope.getTags = function(query) {
-        return $http.get('php/getTags.php?q=' + query);
+        if(query) {
+          return $http.get('php/getTags.php?q=' + query);
+        }
+        else {
+          return $http.get('php/getTags.php');
+        }
       }
 
       $scope.addTag = function(episode, tagName) {
@@ -376,6 +402,7 @@
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data) {
           episode.tags.push(data.tag);
+          updateTagsList();
         }).error(function(data) {
           var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Tag Creation Failed');
@@ -414,8 +441,67 @@
 
       }
 
+      $scope.updateTagsList = function() {
+        $scope.getTags().success(function(tags) {
+          $scope.tags = tags;
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Tag List.'
+          toastr.warning(responce, 'Updating Tags List Failed');
+          console.error('EpisodeCtrl Error - updateTagsList: ', arguments);
+        })
+      }
+
+      $scope.createTag = function() {
+        if($scope.tagName == "") {
+          return;
+        }
+
+        var params = {
+          name: $scope.tagName
+        };
+
+        console.log(params);
+
+        $http({
+          method: 'POST',
+          url: 'php/createTag.php',
+          data: $.param(params),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(tag) {
+          toastr.success('<p>The Tag was successfully created.</p>', 'Tag Created', {
+            allowHtml: true
+          });
+          $scope.tagName = '';
+          $scope.tags.push(tag);
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem creating the Tag.'
+          toastr.warning(responce, 'Tag Creation Failed');
+          console.error('EpisodeCtrl Error - createTag: ', arguments);
+        });
+      }
+
+      $scope.deleteTag = function(tag) {
+        $http({
+          method: 'POST',
+          url: 'php/deleteTag.php',
+          data: $.param({id: tag.id}),
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data) {
+          var index = $scope.tags.indexOf(tag);
+          $scope.tags.splice(index, 1);
+          toastr.success('<p>The Tag was successfully deleted.</p>', 'Tag Deleted', {
+            allowHtml: true
+          });
+        }).error(function(data) {
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem Removing the Tag.'
+          toastr.warning(responce, 'Tag Removal Failed');
+          console.error('EpisodeCtrl Error - deleteTag: ', arguments);
+        });
+      }
+
       $scope.getFilenames();
       $scope.getEpisodes();
+      $scope.updateTagsList();
     }]);
   </script>
 </html>

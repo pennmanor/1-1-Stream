@@ -13,6 +13,7 @@
   $tags = array();
 
   while($row = mysqli_fetch_assoc($result)) {
+    $row['id'] = intval($row['id']);
     $tags[] = $row;
   }
 
