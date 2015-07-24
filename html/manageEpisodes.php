@@ -53,11 +53,7 @@
             <li class="active"><a href="manageEpisodes.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
-                <li><a href="php/logout.php">Logout</a></li>
-            <?php } else{ ?>
-              <li><a data-toggle="modal" data-target="#loginModal">Login</a></li>
-            <?php } ?>
+            <li><a href="php/logout.php" target="_self">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -176,34 +172,6 @@
     </div>
     <div class="navbar-bottom">
       <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
-    </div>
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="loginModalLabel">Login</h4>
-          </div>
-          <div class="modal-body">
-            <form action="php/login.php" method="POST">
-              <div class="form-group">
-                <label>Email address</label>
-                <input type="email" class="form-control" name="email" placeholder="Email" autofocus>
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" name="passwordHash" placeholder="Password">
-              </div>
-              <div class="form-group">
-                <button type="submit" class="btn btn-success pull-right">Login</button>
-                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cancel</button>
-                <div class="clearfix"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>

@@ -1,5 +1,5 @@
 <?php
   session_start();
   session_destroy();
-  echo '{"success": true}';
+  header('Location: ../index.php');
  ?>

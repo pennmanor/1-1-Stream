@@ -35,7 +35,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
-                <li><a href="php/logout.php">Logout</a></li>
+                <li><a href="php/logout.php" target="_self">Logout</a></li>
             <?php } else{ ?>
               <li><a data-toggle="modal" data-target="#loginModal">Login</a></li>
             <?php } ?>
@@ -91,7 +91,7 @@
       <h6>&copy;2015 Ben Thomas, Collin Enders</h6>
     </div>
     <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
+    <div class="modal fade" id="loginModal" ng-controller="loginCtrl" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -99,14 +99,14 @@
             <h4 class="modal-title" id="loginModalLabel">Login</h4>
           </div>
           <div class="modal-body">
-            <form action="php/login.php" method=POST>
+            <form ng-submit="login()">
               <div class="form-group">
                 <label>Email address</label>
-                <input type="email" class="form-control" name="email" placeholder="Email" autofocus>
+                <input type="email" class="form-control" ng-model="email" name="email" placeholder="Email">
               </div>
               <div class="form-group">
                 <label>Password</label>
-                <input type="password" class="form-control" name="passwordHash" placeholder="Password">
+                <input type="password" class="form-control" ng-model="password" name="password" placeholder="Password">
               </div>
               <div class="form-group">
                 <button type="submit" class="btn btn-success pull-right">Login</button>
@@ -124,6 +124,7 @@
   <script type="text/javascript" src="js/angular-animate.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
+  <script type="text/javascript" src="js/sha256.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script src="js/video.js"></script>
   <script type="text/javascript">
@@ -206,5 +207,47 @@
 
       $scope.getEpisodes();
     }]);
+    app.controller('loginCtrl', [
+      '$scope',
+      '$http',
+      'toastr',
+      function($scope, $http, toastr) {
+
+        $scope.login = function() {
+          if(!$scope.email || $scope.email === ' ' ||
+           !$scope.password || $scope.password === ' ') {
+            return;
+          }
+
+          var hasher = new jsSHA("SHA-256", "TEXT");
+          hasher.update($scope.password);
+          var passwordHash = hasher.getHash("HEX");
+
+          var params = {
+            'email': $scope.email,
+            'passwordHash': passwordHash
+          };
+
+          $http({
+            method: 'POST',
+            url: 'php/login.php',
+            data: $.param(params),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          }).success(function(data) {
+            if(data.success) {
+              window.location.reload();
+            }
+            else {
+              toastr.warning(data.message, 'Invalid Login');
+              console.log('loginCtrl - login', data.info);
+            }
+          }).error(function(data) {
+            var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+            toastr.warning(responce, 'Problem Logging In.');
+            console.error('loginCtrl Error - login: ', arguments);
+          })
+        }
+      }
+    ]);
   </script>
 </html>

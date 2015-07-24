@@ -19,7 +19,7 @@
 
   if($result = runQuery($query)){
     if(mysqli_num_rows($result) == 0){
-      echo '{"message": "Login information is not correct.", "info": "Parameters were not passed.","success": false}';
+      echo '{"message": "Login information is not correct.", "info": "Login information is not correct.","success": false}';
     }
     else{
       echo '{"message": "Login successful", "info": "Successful","success": true}';

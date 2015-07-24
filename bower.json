@@ -25,6 +25,7 @@
     "angular-toastr": "~1.4.1",
     "angular-animate": "~1.4.2",
     "font-awesome": "~4.3.0",
-    "lodash": "~3.10.0"
+    "lodash": "~3.10.0",
+    "jssha": "~2.0.1"
   }
 }
