@@ -149,7 +149,9 @@
                       </div>
                     </div>
                     <br>
-                    <tags-input display-property="name" replace-spaces-with-dashes="false" ng-model="tempEpisode.tags" on-tag-added="preAddTag($tag, addedTags)" on-tag-removed="preRemoveTag($tag, removedTags)"></tags-input>
+                    <tags-input ng-model="tempEpisode.tags" on-tag-added="preAddTag($tag, addedTags)" on-tag-removed="preRemoveTag($tag, removedTags)">
+                      <auto-complete source="getTags($query)"></auto-complete>
+                    </tags-input>
                     <br>
                     <div ng-hide="edit" class="btn-toolbar">
                       <div class="btn-group">
@@ -184,17 +186,28 @@
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript">
     var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination', 'ngTagsInput']);
-    app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
-      $animateProvider.classNameFilter(/animate/);
-      $locationProvider.html5Mode({
-        enabled: true,
-        requireBase: false
-      });
+    app.config([
+      '$locationProvider',
+      '$animateProvider',
+      'toastrConfig',
+      'tagsInputConfigProvider',
+      function($locationProvider, $animateProvider, toastrConfig, tagsInputConfigProvider) {
+        $animateProvider.classNameFilter(/animate/);
+        $locationProvider.html5Mode({
+          enabled: true,
+          requireBase: false
+        });
 
-      angular.extend(toastrConfig, {
-        toastClass: 'toast animate'
-      });
-    }]);
+        angular.extend(toastrConfig, {
+          toastClass: 'toast animate'
+        });
+
+        tagsInputConfigProvider.setDefaults('tagsInput', {
+          replaceSpacesWithDashes: false,
+          displayProperty: 'name'
+        });
+      }
+    ]);
 
     app.controller('EpisodeCtrl', ['$scope', '$http', 'toastr', function($scope, $http, toastr) {
       $scope.filenames = [];
@@ -251,14 +264,9 @@
           method: 'POST',
           url: 'php/createEpisode.php',
           data: $.param(params),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
-            console.log(value);
-            return value;
-          })
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(episode) {
           episode.tags = [];
-          console.log(episode);
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully created.</p>' + button, 'Episode Created', {
             allowHtml: true
@@ -297,6 +305,7 @@
         }
 
         for(var i in addedTags) {
+          tempEpisode.tags.splice(tempEpisode.tags.indexOf(addedTags[i]), 1);
           $scope.addTag(tempEpisode, addedTags[i].name);
         }
 
@@ -306,15 +315,14 @@
 
         console.log('tags: ', addedTags, removeTags);
 
+        addedTags.splice(0, addedTags.length);
+        removeTags.splice(0, removeTags.length);
+
         $http({
           method: 'POST',
           url: 'php/updateEpisode.php',
           data: $.param(tempEpisode),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
-            console.log(value);
-            return value;
-          })
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(episode) {
           var button = '<a class="btn btn-success" href="episode.php?id=' + episode.id +'" target="_self">View</a>';
           toastr.success('<p>The Episode was successfully updated.</p>' + button, 'Episode Updated', {
@@ -333,11 +341,7 @@
           method: 'POST',
           url: 'php/deleteEpisode.php',
           data: $.param({id: episode.id}),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
-            console.log(value);
-            return value;
-          })
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data) {
           var index = $scope.episodes.indexOf(episode);
           $scope.episodes.splice(index, 1);
@@ -350,6 +354,10 @@
           toastr.warning(responce, 'Episode Update Failed');
           console.error('EpisodeCtrl Error - deleteEpisode: ', arguments);
         });
+      }
+
+      $scope.getTags = function(query) {
+        return $http.get('php/getTags.php?q=' + query);
       }
 
       $scope.addTag = function(episode, tagName) {
@@ -365,11 +373,7 @@
           method: 'POST',
           url: 'php/addTag.php',
           data: $.param(params),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
-            console.log(value);
-            return value;
-          })
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data) {
           episode.tags.push(data.tag);
         }).error(function(data) {
@@ -380,7 +384,6 @@
       }
 
       $scope.removeTag = function(episode, tag) {
-        console.log(episode.id, tag.id);
         var params = {
           episodeID: episode.id,
           tagID: tag.id
@@ -390,28 +393,14 @@
           method: 'POST',
           url: 'php/removeTag.php',
           data: $.param(params),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          transformResponse: prependTramform($http.defaults.transformResponse, function(value) {
-            console.log(value);
-            return value;
-          })
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function(data) {
-          episode.tags.splice(episode.tags.indexOf(tag), 1);
+          //episode.tags.splice(episode.tags.indexOf(tag), 1);
         }).error(function(data) {
           var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
           toastr.warning(responce, 'Tag Removal Failed');
           console.error('EpisodeCtrl Error - removeTag: ', arguments);
         });
-      }
-
-      function prependTramform(defaults, transform) {
-
-        // We can't guarantee that the default transformation is an array
-        defaults = angular.isArray(defaults) ? defaults : [defaults];
-
-        // prepend the new transformation to the defaults
-        defaults.unshift(transform);
-        return defaults;
       }
 
       $scope.preAddTag = function($tag, addedTags) {
