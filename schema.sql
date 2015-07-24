@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `stream` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `stream`;
+-- MySQL dump 10.13  Distrib 5.6.25, for debian-linux-gnu (x86_64)
 --
--- Host: 127.0.0.1    Database: stream
+-- Host: localhost    Database: stream
 -- ------------------------------------------------------
--- Server version	5.6.24
+-- Server version	5.6.25-0ubuntu0.15.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,7 +31,7 @@ CREATE TABLE `episode` (
   `description` mediumtext NOT NULL,
   `viewable` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,22 +46,22 @@ CREATE TABLE `tag` (
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `taglink`
+-- Table structure for table `tagLink`
 --
 
-DROP TABLE IF EXISTS `taglink`;
+DROP TABLE IF EXISTS `tagLink`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `taglink` (
+CREATE TABLE `tagLink` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tagID` int(11) DEFAULT NULL,
   `episodeID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -89,4 +91,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-22 14:30:56
+-- Dump completed on 2015-07-23 22:41:03
