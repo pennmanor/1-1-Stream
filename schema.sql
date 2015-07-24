@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
+  `password` varchar(64) NOT NULL,
   `permission` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -91,4 +91,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-23 22:41:03
+-- Dump completed on 2015-07-24  1:07:19
