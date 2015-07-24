@@ -11,7 +11,7 @@
 
   function getAllFrom($table) {
     global $connection;
-    $query = "SELECT * FROM `".mysqli_real_escape_string($connection, $table)."`;";
+    $query = "SELECT * FROM `$table`;";
     $result = mysqli_query($connection, $query);
     return $result;
   }
