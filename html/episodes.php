@@ -59,7 +59,7 @@
       </div>
       <br>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div ng-repeat="episode in episodes | filter:filterEposides | orderBy:'-id'" ng-cloak>
+        <div dir-paginate="episode in episodes | filter:filterEposides | orderBy:'-id' | itemsPerPage: 5" ng-cloak>
           <div class="panel panel-default">
             <div class="panel-heading" id="heading{{episode.id}}">
               <p class="panel-title pull-left">
@@ -85,6 +85,9 @@
           </div>
           <br>
         </div>
+      </div>
+      <div class="text-center">
+        <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
       </div>
     </div>
     <div class="navbar-bottom">
@@ -126,11 +129,16 @@
   <script type="text/javascript" src="js/angular-animate.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
+  <script type="text/javascript" src="js/dirPagination.js"></script>
   <script type="text/javascript" src="js/sha256.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script src="js/video.js"></script>
   <script type="text/javascript">
-    var app = angular.module('viewEpisodes', ['toastr', 'ngAnimate']);
+    var app = angular.module('viewEpisodes', [
+      'toastr',
+      'ngAnimate',
+      'angularUtils.directives.dirPagination'
+    ]);
     app.config(['$locationProvider', '$animateProvider', 'toastrConfig', function($locationProvider, $animateProvider, toastrConfig) {
       $animateProvider.classNameFilter(/animate/);
       $locationProvider.html5Mode({
