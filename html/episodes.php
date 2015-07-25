@@ -59,7 +59,7 @@
       </div>
       <br>
       <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        <div ng-repeat="episode in episodes | filter:filterEposides | orderBy:'-id'">
+        <div ng-repeat="episode in episodes | filter:filterEposides | orderBy:'-id'" ng-cloak>
           <div class="panel panel-default">
             <div class="panel-heading" id="heading{{episode.id}}">
               <p class="panel-title pull-left">

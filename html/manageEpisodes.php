@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="styles/font-awesome.min.css">
     <link rel="stylesheet" href="styles/ng-tags-input.min.css">
     <link rel="stylesheet" href="styles/ng-tags-input.bootstrap.min.css">
+    <link rel="stylesheet" href="styles/loading-bar.css">
     <style>
       textarea {
         resize: vertical;
@@ -33,6 +34,7 @@
         margin-bottom: 0;
       }
     </style>
+    <script type="text/javascript" src="js/angular.min.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-default">
@@ -97,19 +99,18 @@
           </form>
         </div>
         <div class="tab-pane active in fade" id="list">
-          <div class="form-group">
+          <div class="input-group">
             <input ng-model="query" type="text" class="form-control" placeholder="Search">
-          </div>
-          <div class="btn-toolbar">
-            <div class="btn-group">
+            <div class="input-group-btn">
               <button ng-click="reorder('id')" class="btn btn-default"><span class="fa fa-sort-numeric-asc"></span></button>
               <button ng-click="reorder('title')" class="btn btn-default"><span class="fa fa-sort-alpha-asc"></span></button>
               <button ng-click="reverseOrder()" class="btn btn-default"><span class="fa" ng-class="{'fa-sort-desc': isReversed, 'fa-sort-asc': !isReversed}" aria-hidden="true"></span></button>
             </div>
           </div>
+
           <br>
           <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <form  name="update" ng-submit="updateEpisode(tempEpisode, addedTags, removedTags); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode); addedTags = []; removedTags = [];">
+            <form  name="update" ng-submit="updateEpisode(tempEpisode, addedTags, removedTags); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode); addedTags = []; removedTags = [];" ng-cloak>
               <div class="panel-heading">
                 <div class="row">
                   <div class="col-xs-10">
@@ -195,22 +196,22 @@
     </div>
   </body>
   <script type="text/javascript" src="js/jquery.min.js"></script>
-  <script type="text/javascript" src="js/angular.min.js"></script>
   <script type="text/javascript" src="js/angular-animate.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.min.js"></script>
   <script type="text/javascript" src="js/angular-toastr.tpls.min.js"></script>
   <script type="text/javascript" src="js/dirPagination.js"></script>
   <script type="text/javascript" src="js/ng-tags-input.min.js"></script>
+  <script type="text/javascript" src="js/loading-bar.js"></script>
   <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <script type="text/javascript">
-    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination', 'ngTagsInput']);
+    var app = angular.module('ManageVideos', ['toastr', 'ngAnimate', 'angularUtils.directives.dirPagination', 'ngTagsInput', 'angular-loading-bar']);
     app.config([
       '$locationProvider',
       '$animateProvider',
       'toastrConfig',
       'tagsInputConfigProvider',
       function($locationProvider, $animateProvider, toastrConfig, tagsInputConfigProvider) {
-        $animateProvider.classNameFilter(/animate/);
+        $animateProvider.classNameFilter(/animate|loading-bar/);
         $locationProvider.html5Mode({
           enabled: true,
           requireBase: false
