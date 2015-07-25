@@ -146,8 +146,10 @@
                 <input type="password" class="form-control" ng-model="password" name="password" placeholder="Password">
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-success pull-right">Login</button>
-                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cancel</button>
+                <div class="btn-group pull-right">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-success">Login</button>
+                </div>
                 <div class="clearfix"></div>
               </div>
             </form>

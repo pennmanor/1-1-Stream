@@ -81,8 +81,10 @@
             It looks like this stream is offline. Would you like to view previous episodes?
             <div>
               <br>
-              <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">No</button>
-              <a href="episodes.php"><button type="button" class="btn btn-success pull-right">Yes</button></a>
+              <div class="button-group pull-right">
+                <a href="episodes.php"><button type="button" class="btn btn-success">Yes</button></a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+              </div>
               <div class="clearfix"></div>
             </div>
           </div>
@@ -108,8 +110,10 @@
                 <input type="password" class="form-control" ng-model="password" name="password" placeholder="Password">
               </div>
               <div class="form-group">
-                <button type="submit" class="btn btn-success pull-right">Login</button>
-                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cancel</button>
+                <div class="btn-group pull-right">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-success">Login</button>
+                </div>
                 <div class="clearfix"></div>
               </div>
             </form>

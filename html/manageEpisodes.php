@@ -80,8 +80,10 @@
                   </select>
                 </div>
                 <div class="col-xs-3">
-                  <input ng-click="changeFileFilter()" class="btn btn-warning pull-right" type="button" value="Change">
-                  <input ng-click="getFilenames()" type="button" class="btn btn-info pull-right" value="Refresh">
+                  <div class="btn-group pull-right">
+                    <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
+                    <input ng-click="getFilenames()" type="button" class="btn btn-info" value="Refresh">
+                  </div>
                 </div>
               </div>
             </div>
