@@ -110,14 +110,16 @@
         <div class="col-md-offset-2 col-md-8">
           <div class="well">
             <p><?php echo $episode['description']?></p>
-            <span>
-              Tags:
-              <?php
-              foreach ($episode['tags'] as $tag) {
-                echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
-              }
-              ?>
-            </span>
+            <?php if(count($episode['tags']) > 0) { ?>
+              <span>
+                Tags:
+                <?php
+                foreach ($episode['tags'] as $tag) {
+                  echo '<span class="label label-info">'.$tag['name'].'</span>&nbsp;';
+                }
+                ?>
+              </span>
+            <?php } ?>
           </div>
         </div>
       </div>
