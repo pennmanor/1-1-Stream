@@ -1,13 +1,15 @@
 {
   "name": "1-1-Stream",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "homepage": "https://github.com/chuck-aka-ben/1-1-Stream",
   "authors": [
     "Benjamin Loong Thomas <benjamin@thomasnetwork.net>"
   ],
   "description": "1:1 Podcast Server",
   "keywords": [
-    "nginx"
+    "nginx",
+    "angular",
+    "1:1"
   ],
   "license": "MIT",
   "ignore": [
