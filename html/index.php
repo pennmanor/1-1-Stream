@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="1:1 Stream">
-    <meta name="author" content="Benjamin Thomas">
+    <meta name="author" content="Benjamin Thomas, Collin Enders">
     <title>1:1 Podcast Stream</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/footer.css">
@@ -37,7 +37,7 @@
             <li class="active"><a href="#" target="_self">Live<span class="sr-only">(current)</span></a></li>
             <li><a href="episodes.php" target="_self">Episodes</a></li>
             <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
-              <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+              <li><a href="manage.php" target="_self">Manage</a></li>
             <?php } ?>
           </ul>
           <ul class="nav navbar-nav navbar-right">

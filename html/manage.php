@@ -11,8 +11,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="1:1 Stream">
-    <meta name="author" content="Benjamin Thomas">
-    <title>Manage Videos</title>
+    <meta name="author" content="Benjamin Thomas, Collin Enders">
+    <title>1:1 Podcast Manager</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/footer.css">
     <link rel="stylesheet" href="styles/angular-toastr.min.css">
@@ -52,7 +52,7 @@
           <ul class="nav navbar-nav">
             <li><a href="index.php" target="_self">Live</a></li>
             <li><a href="episodes.php" target="_self">Episodes</a></li>
-            <li class="active"><a href="manageEpisodes.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="manage.php" target="_self">Manage<span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="php/logout.php" target="_self">Logout</a></li>
@@ -61,7 +61,7 @@
       </div>
     </nav>
     <div class="container" ng-controller="EpisodeCtrl">
-      <h1 class="page-header">1:1 Podcast Episodes Editor</h1>
+      <h1 class="page-header">1:1 Podcast Manager</h1>
       <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#new" data-toggle="tab">Create</a></li>
         <li role="presentation" class="active"><a href="#list" data-toggle="tab">Edit</a></li>

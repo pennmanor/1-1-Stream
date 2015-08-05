@@ -10,7 +10,7 @@
   }
   $id = $_GET['id'];
 
-  $query = 'SELECT e.id, e.filename, e.title, e.description, e.viewable, t.name as tagName, t.id as tagID FROM (episode e LEFT JOIN tagLink tl ON e.id = tl.episodeID) LEFT JOIN tag t on t.id = tl.tagID WHERE e.id="'.$id.'" ORDER BY e.id';
+  $query = 'SELECT e.id, e.filename, e.title, e.description, e.viewable, t.name as tagName, t.id as tagID FROM (episode e LEFT JOIN tagLink tl ON e.id = tl.episodeID) LEFT JOIN tag t on t.id = tl.tagID WHERE e.id="'.mysqli_escape_string($connection, $id).'" ORDER BY e.id';
   $result = runQuery($query);
 
   closeConnection();
@@ -51,7 +51,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="1:1 Stream">
-    <meta name="author" content="Benjamin Thomas">
+    <meta name="author" content="Benjamin Thomas, Collin Enders">
     <title>1:1 Podcast Episode: <?php echo $episode['title']; ?></title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
     <link rel="stylesheet" href="styles/footer.css">
@@ -59,9 +59,9 @@
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
       .vjs-default-skin { color: #ffffff; }
-      .vjs-default-skin .vjs-control-bar { font-size: 103% }
-      .video-js {padding-top: 56.25%}
-      .vjs-fullscreen {padding-top: 0px}
+      .vjs-default-skin .vjs-control-bar { font-size: 103%; }
+      .video-js {padding-top: 56.25%;}
+      .vjs-fullscreen {padding-top: 0px;}
     </style>
   </head>
   <body>
@@ -81,7 +81,7 @@
             <li><a href="index.php" target="_self">Live</a></li>
             <li><a href="episodes.php" target="_self">Episodes</a></li>
             <?php if(isSet($_SESSION['userPermission']) && $_SESSION['userPermission'] == 1){?>
-              <li><a href="manageEpisodes.php" target="_self">Manage</a></li>
+              <li><a href="manage.php" target="_self">Manage</a></li>
             <?php } ?>
           </ul>
           <ul class="nav navbar-nav navbar-right">
