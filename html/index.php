@@ -15,9 +15,9 @@
     <link rel="stylesheet" href="styles/video-js.css">
     <style type="text/css">
       .vjs-default-skin { color: #ffffff; }
-      .vjs-default-skin .vjs-control-bar { font-size: 103% }
-      .video-js {padding-top: 56.25%}
-      .vjs-fullscreen {padding-top: 0px}
+      .vjs-default-skin .vjs-control-bar {font-size: 103%; }
+      .video-js {padding-top: 56.25%;}
+      .vjs-fullscreen {padding-top: 0px;}
     </style>
   </head>
   <body>

@@ -73,19 +73,9 @@
           <form name="create" ng-submit="createEpisode(create)">
             <div class="form-group" ng-class="{ 'has-error': create.filename.$invalid && create.filename.$touched}">
               <label class="control-label">File</label>
-              <div class="row">
-                <div class="col-xs-9">
-                  <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames" required>
-                    <option value="">--</option>
-                  </select>
-                </div>
-                <div class="col-xs-3">
-                  <div class="btn-group pull-right">
-                    <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
-                    <input ng-click="getFilenames()" type="button" class="btn btn-info" value="Refresh">
-                  </div>
-                </div>
-              </div>
+              <select ng-model="filename" class="form-control" name="filename" ng-options="filename for filename in filenames" required>
+                <option value="">--</option>
+              </select>
             </div>
             <div class="form-group" ng-class="{ 'has-error': create.title.$invalid && create.title.$touched}">
               <label class="control-label">Title</label>
@@ -112,7 +102,11 @@
 
           <br>
           <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <form  name="update" ng-submit="updateEpisode(tempEpisode, addedTags, removedTags); edit = true; episode = copy(tempEpisode)" class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4" ng-init="tempEpisode = copy(episode); addedTags = []; removedTags = [];" ng-cloak>
+            <form  name="update" ng-submit="updateEpisode(tempEpisode, addedTags, removedTags); edit = true; episode = copy(tempEpisode)"
+             pagination-id="episode"
+             class="panel panel-default" dir-paginate="episode in episodes | filter:query | orderBy:sortedBy:isReversed | itemsPerPage: 4"
+
+             ng-init="tempEpisode = copy(episode); addedTags = []; removedTags = [];" ng-cloak>
               <div class="panel-heading">
                 <div class="row">
                   <div class="col-xs-10">
@@ -133,23 +127,15 @@
               </div>
               <div id="panel-{{$index}}" class="panel-collapse collapse" ng-class="{ 'in':!edit }">
                 <div class="panel-body">
-                  <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
-                    <label class="control-label">Description</label>
-                    <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
-                  </div>
                   <div class="form-group" ng-class="{ 'has-error': update.filename.$invalid && update.filename.$touched}">
                     <label class="control-label">Filename</label>
-                    <div ng-hide="edit" class="row">
-                      <div class="col-xs-9">
-                        <select ng-model="tempEpisode.filename" class="form-control" name="filename" required>
-                          <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
-                          <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
-                        </select>
-                      </div>
-                      <div class="col-xs-3">
-                        <input ng-click="changeFileFilter()" class="btn btn-warning" type="button" value="Change">
-                        <button ng-click="getFilenames()" class="btn btn-info pull-right">Refresh</button>
-                      </div>
+                    <select ng-hide="edit" ng-model="tempEpisode.filename" class="form-control" name="filename" required>
+                      <option value="{{tempEpisode.filename}}" selected="">{{tempEpisode.filename}}</option>
+                      <option ng-repeat="filename in filenames" value="{{filename}}">{{filename}}</option>
+                    </select>
+                    <div class="form-group" ng-class="{ 'has-error': update.description.$invalid && update.description.$touched}">
+                      <label class="control-label">Description</label>
+                      <textarea ng-hide="edit" rows="3" class="form-control" type="text" name="description" ng-model="tempEpisode.description" placeholder="Description" required></textarea>
                     </div>
                     <br>
                     <tags-input ng-model="tempEpisode.tags" on-tag-added="preAddTag($tag, addedTags)" on-tag-removed="preRemoveTag($tag, removedTags)">
@@ -170,7 +156,7 @@
             </form>
           </div>
           <div class="text-center">
-            <dir-pagination-controls template-url="dirPagination.tpl.html"></dir-pagination-controls>
+            <dir-pagination-controls  pagination-id="episode" template-url="dirPagination.tpl.html"></dir-pagination-controls>
           </div>
         </div>
         <div class="tab-pane fade" id="tag">
@@ -184,12 +170,15 @@
           </form>
           <br>
           <ul class="list-group">
-            <li class="list-group-item" ng-repeat="tag in tags | orderBy:'-id'">
+            <li class="list-group-item" pagination-id="tag" dir-paginate="tag in tags | orderBy:'-id' | itemsPerPage: 5">
               <p class="pull-left">{{tag.name}}</p>
               <button ng-click="deleteTag(tag)" class="btn btn-sm btn-danger pull-right">Delete</button>
               <div class="clearfix"></div>
             </li>
           </ul>
+          <div class="text-center">
+            <dir-pagination-controls pagination-id="tag" template-url="dirPagination.tpl.html" ></dir-pagination-controls>
+          </div>
         </div>
       </div>
     </div>
@@ -236,12 +225,9 @@
       $scope.tags = [];
 
       //pagination
-      $scope.isReversed = true;
+      $scope.isReversed = false;
       $scope.sortedBy = 'id';
 
-      $scope.setPage = function(pageNo) {
-        $scope.currentPage = pageNo;
-      };
 
       var fileFilter = 'NOT_IN_DB';
 
