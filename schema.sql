@@ -77,10 +77,10 @@ CREATE TABLE `tag` (
 -- Table structure for table `taglink`
 --
 
-DROP TABLE IF EXISTS `taglink`;
+DROP TABLE IF EXISTS `tagLink`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `taglink` (
+CREATE TABLE `tagLink` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tagID` int(11) DEFAULT NULL,
   `episodeID` int(11) NOT NULL,
