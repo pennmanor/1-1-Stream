@@ -102,8 +102,8 @@
           <div class="modal-body">
             <form ng-submit="login()">
               <div class="form-group">
-                <label>Email address</label>
-                <input type="email" class="form-control" ng-model="email" name="email" placeholder="Email">
+                <label>User Name</label>
+                <input type="text" class="form-control" ng-model="username" name="username" placeholder="User Name">
               </div>
               <div class="form-group">
                 <label>Password</label>
@@ -170,18 +170,14 @@
     function($scope, $http, toastr) {
 
       $scope.login = function() {
-        if(!$scope.email || $scope.email === ' ' ||
+        if(!$scope.username || $scope.username === ' ' ||
          !$scope.password || $scope.password === ' ') {
           return;
         }
 
-        var hasher = new jsSHA("SHA-256", "TEXT");
-        hasher.update($scope.password);
-        var passwordHash = hasher.getHash("HEX");
-
         var params = {
-          'email': $scope.email,
-          'passwordHash': passwordHash
+          'email': $scope.username,
+          'password': $scope.password
         };
 
         $http({
@@ -194,11 +190,12 @@
             window.location.reload();
           }
           else {
-            toastr.warning(data.message, 'Invalid Login');
-            console.log('loginCtrl - login', data.info);
+            var responce = typeof(data) !== "undefined" && data.message ? data.message : 'Could not login you in with that information.';
+            toastr.warning(responce, 'Invalid Login');
+            console.log('loginCtrl - login', data);
           }
         }).error(function(data) {
-          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem updating the Episode.'
+          var responce = typeof(data) !== "undefined" && data.message ? data.message : 'There was a problem logging you in.';
           toastr.warning(responce, 'Problem Logging In.');
           console.error('loginCtrl Error - login: ', arguments);
         })

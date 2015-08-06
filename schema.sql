@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `stream` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `stream`;
--- MySQL dump 10.13  Distrib 5.6.25, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
--- Host: localhost    Database: stream
+-- Host: 127.0.0.1    Database: stream
 -- ------------------------------------------------------
--- Server version	5.6.25-0ubuntu0.15.04.1
+-- Server version	5.6.25
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,6 +35,30 @@ CREATE TABLE `episode` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `ssusers`
+--
+
+DROP TABLE IF EXISTS `ssusers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ssusers` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `UserName` varchar(15) NOT NULL,
+  `FirstName` varchar(30) NOT NULL,
+  `LastName` varchar(30) NOT NULL,
+  `Password` varchar(255) NOT NULL DEFAULT 'oops',
+  `UserType` int(11) NOT NULL DEFAULT '2',
+  `IsActive` tinyint(1) NOT NULL DEFAULT '1',
+  `Email` varchar(40) NOT NULL,
+  `Building` int(11) DEFAULT '22',
+  `CreationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `OldUserID` varchar(10) NOT NULL,
+  `OldPassword` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tag`
 --
 
@@ -46,40 +70,22 @@ CREATE TABLE `tag` (
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `tagLink`
+-- Table structure for table `taglink`
 --
 
-DROP TABLE IF EXISTS `tagLink`;
+DROP TABLE IF EXISTS `taglink`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tagLink` (
+CREATE TABLE `taglink` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `tagID` int(11) DEFAULT NULL,
   `episodeID` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email` varchar(45) NOT NULL,
-  `password` varchar(64) NOT NULL,
-  `permission` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -91,4 +97,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-07-24  1:07:19
+-- Dump completed on 2015-08-06 13:46:55

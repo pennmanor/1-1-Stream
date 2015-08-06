@@ -104,8 +104,8 @@
           <div class="modal-body">
             <form ng-submit="login()">
               <div class="form-group">
-                <label>Email address</label>
-                <input type="email" class="form-control" ng-model="email" name="email" placeholder="Email">
+                <label>User Name</label>
+                <input type="text" class="form-control" ng-model="username" name="username" placeholder="User Name">
               </div>
               <div class="form-group">
                 <label>Password</label>
@@ -224,18 +224,14 @@
       function($scope, $http, toastr) {
 
         $scope.login = function() {
-          if(!$scope.email || $scope.email === ' ' ||
+          if(!$scope.username || $scope.username === ' ' ||
            !$scope.password || $scope.password === ' ') {
             return;
           }
 
-          var hasher = new jsSHA("SHA-256", "TEXT");
-          hasher.update($scope.password);
-          var passwordHash = hasher.getHash("HEX");
-
           var params = {
-            'email': $scope.email,
-            'passwordHash': passwordHash
+            'email': $scope.username,
+            'password': $scope.password
           };
 
           $http({

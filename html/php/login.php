@@ -1,37 +1,42 @@
 <?php
-
+  session_start();
   require dirname(__FILE__).'/mysql-connect.php';
 
-  if(!isset($_POST['email']) || !isset($_POST['passwordHash'])) {
+  if(!isset($_POST['email']) || !isset($_POST['password'])) {
     http_response_code(400);
     echo '{"message": "Oops, there was a problem logging you in!", "info": "Parameters were not passed.","success": false}';
     return;
   }
 
   $email = $_POST['email'];
-  $passwordHash = $_POST['passwordHash'];
+  $password = $_POST['password'];
 
   openConnection();
 
   $safeEmail = mysqli_escape_string($connection, $email);
-  $safePasswordHash = mysqli_escape_string($connection, $passwordHash);
-  $query = "SELECT email,permission FROM user WHERE email = '$safeEmail' and password = '$safePasswordHash';";
+  $query = "SELECT * FROM ssusers WHERE UserName = '$safeEmail'";
 
-  if($result = runQuery($query)){
-    if(mysqli_num_rows($result) == 0){
+  if($result = runQuery($query)) { // Query executed successfully
+    if(mysqli_num_rows($result) == 0) { // Row with email not found
       echo '{"message": "Login information is not correct.", "info": "Login information is not correct.","success": false}';
     }
-    else{
-      echo '{"message": "Login successful", "info": "Successful","success": true}';
-      session_start();
+    else {
       $row = mysqli_fetch_assoc($result);
-      $permission = $row['permission'];
-      $_SESSION['userEmail'] = $_POST['email'];
-      $_SESSION['userPermission'] = $permission;
+      if(password_verify($password, $row['Password'])) { // Password does not match
+        echo '{"message": "Login information is not correct.", "info": "Login information is not correct.","success": false}';
+      }
+      else {
+        echo '{"message": "Login successful", "info": "Successful","success": true}';
+        $permission = 1;
+        $_SESSION['user'] = $row['UserName'];
+        $_SESSION['userPermission'] = $permission;
+      }
+
     }
   }
   else {
-    echo "$query";
+    http_response_code(500);
+    echo '{"message": "There was an internal server problem", "info": "MySQL query failed.","success": false}';
   }
 
   closeConnection();
